@@ -1,3 +1,20 @@
+sub play_options {
+	open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+	@lines = <FILE>;
+	close FILE;
+	$html_options;
+	foreach my $line (@lines) {
+		my @parts = split(/=/, $line);
+		my $play_id = @parts[0];
+		my $play = @parts[1];
+		my $numseats = @parts[2];
+		if (int($numseats) > 0){
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>'
+		}
+	}
+	return $html_options;
+}
+
 sub add_user { # takes username and hashed password
 	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
 	my $username = $_[0];
@@ -50,12 +67,11 @@ sub getUsername{
   {
     @tempData = split(/=/,$line);
     chomp ($tempData[0]);
-      if($tempData[0] eq $user_ip)
-      {
-        chomp ($tempData[1]);
-        $username = $tempData[1];
-      }
-  
+    if($tempData[0] eq $user_ip)
+    {
+    	chomp ($tempData[1]);
+      $username = $tempData[1];
+    }
   }
   close FILE;
   return $username;

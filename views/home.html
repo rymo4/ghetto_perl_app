@@ -5,3 +5,18 @@
 <form action="main.pl.cgi" method=POST>
 <input type="hidden" name="logout">
 <input type="submit" value="logout" class="btn btn-primary btn-large"></form>
+
+<form action="main.pl.cgi" method=POST>
+
+	<select name="play">
+		$play_options
+	</select>
+	
+	<select name="numseats">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+	</select>
+
+<input type="submit" value="Order" class="btn btn-primary btn-large"></form>
