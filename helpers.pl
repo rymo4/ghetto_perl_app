@@ -38,6 +38,23 @@ sub isNameAvailable{
 
 }
 
+sub isLoggedIn {
+
+	my $user_ip = $ENV{REMOTE_ADDR}; 
+	my $loggedIn = 0;
+	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
+	while($line=<FILE>)
+  	{
+    	if($line eq $user_ip)
+    	{
+      		$loggedIn = 1;
+    	}
+  	}
+  	close FILE;
+  	return $loggedIn;  	
+
+}
+
 sub signin { #
 	open (FILE, ">>users.txt") || die "Problem opening sessions.txt $1";
 	my $username = $_[0];
