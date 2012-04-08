@@ -54,7 +54,7 @@ sub isLoggedIn {
 }
 
 sub signin { #
-	open (FILE, ">>users.txt") || die "Problem opening sessions.txt $1";
+	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
 	my $username = $_[0];
 	my $user_ip = $ENV{REMOTE_ADDR};
 	print FILE "$user_ip\n";
@@ -80,17 +80,6 @@ sub signout {
 	
 	# remove the line with the username in it from sessions.txt
 
-sub generate_random_string
-{
-	my $length_of_randomstring=shift;
-	my @chars=('a'..'z','A'..'Z','0'..'9','_');
-	my $random_string;
-	foreach (1..$length_of_randomstring) 
-	{
-		$random_string.=$chars[rand @chars];
-	}
-	return $random_string;
-}
 
 #subroutine that checks whether the supplied password and username match an entry in the database. It relies on the MD5 algorithm to do so.
 sub password_check

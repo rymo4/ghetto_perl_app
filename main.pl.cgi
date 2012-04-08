@@ -17,7 +17,6 @@ if (!&isLoggedIn)
 {
 	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} ) # Registration
 	{
-
 		my $available = &isNameAvailable( $params{'new_username'});
 		if ($params{'confirm_password'} eq $params{'new_password'} && $available)
 		{
@@ -35,7 +34,7 @@ if (!&isLoggedIn)
 
 	}
 	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
-	{
+	{	
 		my $valid = &password_check( $params{'username'}, $params{'password'});
 		if($valid == 1)
 		{
@@ -54,12 +53,13 @@ if (!&isLoggedIn)
 	# LANDING PAGE
 	else
 	{
+		
 		&render('landing');
 	}
 
 }
 else
 {
-	&render('landing');
+	&render('home');
 }
 
