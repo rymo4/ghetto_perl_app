@@ -22,7 +22,8 @@ if ( exists $params{'new_username'} && exists $params{'new_password'} && exists 
 		&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
 		&signin($params{'new_username'});
 		# user is now signed in, so render the same HTML as the Signin branch of the statement
-		&render('home', { username => 'testing' });
+		our %hash = ('username' => "Ryder Moody");
+		&render("home",\%hash);
 	}
 	else # FAILED REGISTRATION
 	{
