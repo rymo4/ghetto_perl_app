@@ -155,9 +155,7 @@ sub getNumReservations
     $numReservations++;
   }
   close FILE;
-	
   return $numReservations;
-
 }
 
 sub getPlayName
