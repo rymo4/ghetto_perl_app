@@ -13,32 +13,53 @@ print "Content-type: text/html\n\n";
 
 my %params = &parse_form($POST_data);
 
-# SIGNED UP AND SIGNED IN (unless errors)
-if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} ) # Registration
+if (!$loggedIn) 
 {
-	if ($params{'confirm_password'} eq $params{'new_password'})
+	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} ) # Registration
 	{
-		# TODO: validations to make sure username does not exist, etc.
-		&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
-		&signin($params{'new_username'});
-		# user is now signed in, so render the same HTML as the Signin branch of the statement
-		our %hash = ('username' => "Ryder Moody");
-		&render("home",\%hash);
+
+		my $available = &isNameAvailable( $params{'new_username'})
+		if ($params{'confirm_password'} eq $params{'new_password'} && $available)
+		{
+			# TODO: validations to make sure username does not exist, etc.
+			&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
+			&signin($params{'new_username'});
+			# user is now signed in, so render the same HTML as the Signin branch of the statement
+			&render('home', { username => $params{'new_username'} });
+		}
+		else # FAILED REGISTRATION
+		{
+				# TODO: add errors sine your password didnt match or the username was taken
+			&render('landing');
+		}
+
 	}
-	else # FAILED REGISTRATION
+	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
 	{
-		# TODO: add errors since your password didnt match or the username was taken
-		print($params{'new_password'});
-		print($params{'confirm_password'});
+		my $valid = &password_check( $params{'username'}, $params{'password'});
+		if($valid == 1)
+		{
+			&signin( $params{'username'});
+			&render('home', { username => $params{'username'} });
+		}
+		else
+		{
+			&render('invalidlogin', { username => $params{'username'} });
+		}
+	}
+	elsif (exists $params{'logout'})
+	{
+		&signout();
+	}
+	# LANDING PAGE
+	else
+	{
 		&render('landing');
 	}
+
 }
-elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
-{
-	&render('home', { username => $params{'new_username'} });
-}
-# LANDING PAGE
 else
 {
-		&render('landing');
+	&render('home', { username => $params{'username'} });
 }
+
