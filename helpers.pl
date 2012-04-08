@@ -1,18 +1,28 @@
+sub output_reservations_html {
+	my @reservations = &getUserHistory;
+	my $formatted;
+
+	foreach my $res (@reservations) {
+		$formatted = $formatted . "<tr><td>$numUsers</td></tr>";
+	}
+	return $formatted;
+}
+
 sub getPlayOptions {
 	open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
 	@lines = <FILE>;
 	close FILE;
-	$html_options;
+	my $html_options;
 	foreach my $line (@lines) {
 		my @parts = split(/=/, $line);
 		my $play_id = @parts[0];
 		my $play = @parts[1];
 		my $numseats = @parts[2];
 		if (int($numseats) > 0){
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>'
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>';
 		}
 		else {
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . ' (SOLD OUT)' . '</option>'
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . ' (SOLD OUT)' . '</option>';
 		}
 	}
 	return $html_options;
@@ -111,11 +121,9 @@ sub checkAvailability {
     chomp ($tempData[0]);
     if($play_id eq $tempData[0])
     {
-			print $tempData[2];
       chomp ($tempData[2]);
       my $seatsAvailable = int($tempData[2]);
 
-			print "$numSeats ... $seatsAvailable";
       if($numSeats <= $seatsAvailable)
       {
         $available = 1;
@@ -140,13 +148,14 @@ sub getNumUsers
 
 sub getNumReservations
 {
-  my $NumReservations = 0;
+  my $numReservations = 0;
   open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
   while($line=<FILE>)
   {
     $numReservations++;
   }
   close FILE;
+	
   return $numReservations;
 
 }
@@ -203,7 +212,6 @@ sub makeReservation
 
  
   my $replace = "$play_id=$playName=$newNumSeats";
- print "$replace";
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
@@ -228,7 +236,7 @@ sub signin { #
 	close FILE;
 }
 
-sub signout {
+sub signout {	# remove the line with the username in it from sessions.txt
 	my $user_ip = $ENV{REMOTE_ADDR};
 	my $filename = 'sessions.txt';
 	my $replace = ' ';
@@ -245,8 +253,6 @@ sub signout {
    }
 }
 	
-	# remove the line with the username in it from sessions.txt
-
 
 #subroutine that checks whether the supplied password and username match an entry in the database. It relies on the MD5 algorithm to do so.
 sub password_check

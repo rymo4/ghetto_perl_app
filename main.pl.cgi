@@ -73,12 +73,12 @@ else # you ARE logged in
 		{
 			&makeReservation($params{'play_id'}, $params{'numseats'});
 			&log_data("$username new reservation, $params{'numseats'} seats for $play");
-			&render('home', { success => 'Reservation succesfully made', play_options => &getPlayOptions });
+			&render('home', { success => 'Reservation succesfully made'});
 		}
 		else
 		{
 			&log_data("$username failed reservation, $params{'numseats'} seats for $play insufficient availability");
-			&render('home', { errors => 'Not enough seats available for your play and time selection', play_options => &getPlayOptions });
+			&render('home', { errors => 'Not enough seats available for your play and time selection' });
 
 		}
 	}
@@ -86,12 +86,12 @@ else # you ARE logged in
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations);
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, reservations => &output_reservations_html });
 	}
 	else
 	{
 		
-		&render('home', { username => &getUsername, play_options => &getPlayOptions });
+		&render('home', { username => &getUsername});
 
 	}
 	
