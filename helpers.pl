@@ -19,6 +19,25 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 	%form;
 }
 
+sub isNameAvailable{
+	my $available = 1;
+	my $username = $_[0];
+	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
+	while($line=<FILE>)
+  	{
+    	@tempData = split(/=/,$line);
+    	chomp ($tempData[0]);
+    	if($username eq $tempData[0])
+    	{
+      		$available = 0;
+    	}
+  	}
+  	close FILE;
+  	return $available;
+	
+
+}
+
 sub signin { #
 	open (FILE, ">>users.txt") || die "Problem opening sessions.txt $1";
 	my $username = $_[0];
@@ -69,7 +88,7 @@ sub password_check
   chomp ($password);
   chomp ($username);
   my @tempData;
-  open(FH1, "password.txt");
+  open(FH1, "users.txt");
   while($line=<FH1>)
   {
     @tempData = split(/=/,$line);
@@ -80,6 +99,7 @@ sub password_check
       $valid = 1;
     }
   }
+  close FH1;
   return $valid;
 }
 
