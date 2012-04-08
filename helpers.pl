@@ -126,6 +126,31 @@ sub checkAvailability {
 	return $available;
 }
 
+sub getNumUsers
+{
+  my $numUsers =0;
+  open (FILE, "users.txt") || die "Problem opening users.txt $1";
+  while($line=<FILE>)
+  {
+    $numUsers++;
+  }
+  close FILE;
+  return $numUsers;
+}
+
+sub getNumReservations
+{
+  my $NumReservations = 0;
+  open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
+  while($line=<FILE>)
+  {
+    $numReservations++;
+  }
+  close FILE;
+  return $numReservations;
+
+}
+
 sub getPlayName
 {
   my $play_id = $_[0];
