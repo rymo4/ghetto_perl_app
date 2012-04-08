@@ -1,4 +1,4 @@
-sub play_options {
+sub getPlayOptions {
 	open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
 	@lines = <FILE>;
 	close FILE;
@@ -119,7 +119,6 @@ sub checkAvailability {
 	close FILE;
 	return $available;
 }
-
 
 sub getPlayName
 {
