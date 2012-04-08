@@ -1,5 +1,6 @@
 sub layout { # takes 1 string that contains what to insert in $yield
 	my $yield = $_[0];
+	my $errors = $_[1];
 	print <<"END_OF_PRINTING";
 	<!DOCTYPE html>
 	<html>
@@ -14,6 +15,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 		</head>
 		<body>
 			<div class="container">
+				$errors
 				$yield
 			</div>
 		</body>

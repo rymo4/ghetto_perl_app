@@ -32,7 +32,6 @@ if (!&isLoggedIn)
 			&log_data("Failed registration attempt");	# TODO: add errors sine your password didnt match or the username was taken
 			&render('landing');
 		}
-
 	}
 	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
 	{	
@@ -58,13 +57,21 @@ if (!&isLoggedIn)
 	# LANDING PAGE
 	else
 	{
-		
 		&render('landing');
 	}
 
 }
-else
+else # you ARE logged in
 {
-	&render('home');
+	if (exists $params{'logout'})
+	{
+		&signout();
+		&render('landing');
+	}
+	else
+	{
+		&render('home');
+	}
+	
 }
 

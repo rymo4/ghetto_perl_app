@@ -7,7 +7,6 @@ sub render {
 	my $params_ref = shift;
 	my %params = %{$params_ref};
 		
-	
 	open( FILE, "views/$filename.html" ) || die "problem opening $filename.html $!";
 	my @html_raw = <FILE>; 
 	close FILE;
@@ -24,13 +23,8 @@ sub render {
 			}
 			$html = $html . $line;
 	}
-	print "this rendered!\n";
-	
-	foreach  (keys %params)
-	{
-			print " $_ => " . $params{$_} . "\n";
-	}
-	&layout($html);
+
+	&layout($html, $params{'errors'});
 }
 
 1; # cause this has to return a true value...
