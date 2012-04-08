@@ -28,10 +28,9 @@ if (!&isLoggedIn)
 		}
 		else # FAILED REGISTRATION
 		{
-				# TODO: add errors sine your password didnt match or the username was taken
-			&render('landing');
+			# TODO: add errors sine your password didnt match or the username was taken
+			&render('landing', { errors => '<h2>Password confirmation did not match</h1>'});
 		}
-
 	}
 	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
 	{	
@@ -46,20 +45,24 @@ if (!&isLoggedIn)
 			&render('invalidlogin', { username => $params{'username'} });
 		}
 	}
-	elsif (exists $params{'logout'})
-	{
-		&signout();
-	}
 	# LANDING PAGE
 	else
 	{
-		
 		&render('landing');
 	}
 
 }
-else
+else # you ARE logged in
 {
-	&render('home');
+	if (exists $params{'logout'})
+	{
+		&signout();
+		&render('landing');
+	}
+	else
+	{
+		&render('home');
+	}
+	
 }
 

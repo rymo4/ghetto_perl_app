@@ -40,9 +40,11 @@ sub isLoggedIn {
 
 	my $user_ip = $ENV{REMOTE_ADDR}; 
 	my $loggedIn = 0;
-	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
+	
+	open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
 	while($line=<FILE>)
   	{
+			chomp $line;
     	if($line eq $user_ip)
     	{
       		$loggedIn = 1;
