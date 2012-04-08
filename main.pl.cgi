@@ -68,7 +68,7 @@ else # you ARE logged in
 	{
 		my $available = &checkAvailability($params{'play_id'}, $params{'numseats'});
 		my $play = &getPlayName($params{'play_id'});
-		if(available)
+		if($available)
 		{
 			&makeReservation($params{'play_id'}, $params{'numseats'});
 			&log_data("$username new reservation, $params{'numseats'} seats for $play");
