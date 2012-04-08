@@ -11,6 +11,9 @@ sub getPlayOptions {
 		if (int($numseats) > 0){
 			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>'
 		}
+		else {
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . ' (SOLD OUT)' . '</option>'
+		}
 	}
 	return $html_options;
 }
@@ -99,7 +102,7 @@ sub isLoggedIn {
 
 sub checkAvailability {
   my $play_id = $_[0];
-  my $numSeats = $_[1];
+  my $numSeats = int($_[1]);
   my $available = 0;
   open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
   while($line=<FILE>)
@@ -108,9 +111,12 @@ sub checkAvailability {
     chomp ($tempData[0]);
     if($play_id eq $tempData[0])
     {
-      chomp ($tempData[1]);
-      my $seatsAvailable = int($tempData[1]);
-      if(numSeats <= seatsAvailable)
+			print $tempData[2];
+      chomp ($tempData[2]);
+      my $seatsAvailable = int($tempData[2]);
+
+			print "$numSeats ... $seatsAvailable";
+      if($numSeats <= $seatsAvailable)
       {
         $available = 1;
       }
@@ -165,17 +171,18 @@ sub makeReservation
   my $newNumSeats = $numSeatsAvailable - $numSeatsOrder;
   my $playName = &getPlayName($play_id);
 
+	
   #replaces info with new number of available seats
   my $filename = 'availability.txt';
 
 
-  print "$replace;"
+ 
   my $replace = "$play_id=$playName=$newNumSeats";
-
+ print "$replace";
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
-      if( s/$play_id=$play_id=$numSeats/$replace/ig ) {
+      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
          print;
       }
       else {

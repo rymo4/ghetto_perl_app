@@ -1,9 +1,11 @@
 require 'layout.pl';
+require 'helpers.pl';
 
 sub render {
 	my $filename = shift;
 	my $params_ref = shift;
 	my %params = %{$params_ref};
+	$params{'play_options'} =  &getPlayOptions;
 	open( FILE, "views/$filename.html" ) || die "problem opening $filename.html $!";
 	my @html_raw = <FILE>; 
 	close FILE;

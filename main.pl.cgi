@@ -58,26 +58,27 @@ if (!&isLoggedIn)
 else # you ARE logged in
 {
 	my $username = &getUsername();
-	if (exists $params{'logout'})
+	if (exists $params{'logout'}) # LOGGED OUT
 	{
 		&log_data("$username logged out");
 		&signout(&getUsername());
 		&render('landing');
 	}
-	elsif(exists $params{'play_id'} && exists $params{'numseats'})
+	elsif(exists $params{'play_id'} && exists $params{'numseats'}) # PLACED ORDER
 	{
+	
 		my $available = &checkAvailability($params{'play_id'}, $params{'numseats'});
 		my $play = &getPlayName($params{'play_id'});
 		if($available)
 		{
 			&makeReservation($params{'play_id'}, $params{'numseats'});
 			&log_data("$username new reservation, $params{'numseats'} seats for $play");
-			&render('home', {success => 'Reservation succesfully made'});
+			&render('home', { success => 'Reservation succesfully made', play_options => &getPlayOptions });
 		}
 		else
 		{
 			&log_data("$username failed reservation, $params{'numseats'} seats for $play insufficient availability");
-			&render('home', { errors => 'Not enough seats available for your play and time selection'});
+			&render('home', { errors => 'Not enough seats available for your play and time selection', play_options => &getPlayOptions });
 
 		}
 	}
