@@ -25,7 +25,7 @@ if (!&isLoggedIn)
 			&signin($params{'new_username'});
 			&log_data("New user $params{'new_username'} registered");
 			# user is now signed in, so render the same HTML as the Signin branch of the statement
-			&render('home', { username => $params{'new_username'} });
+			&render('home', { username => &getUsername });
 		}
 		else # FAILED REGISTRATION
 		{
@@ -40,12 +40,12 @@ if (!&isLoggedIn)
 		{
 			&signin( $params{'username'});
 			&log_data("$params{'username'} logged in");
-			&render('home', { username => $params{'username'} });
+			&render('home', { username => &getUsername });
 		}
 		else
 		{
 			&log_data("$params{'username'} invalid login attempt");
-			&render('invalidlogin', { username => $params{'username'} });
+			&render('invalidlogin', { username => &getUsername });
 		}
 	}
 	# LANDING PAGE

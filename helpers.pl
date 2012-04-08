@@ -50,17 +50,15 @@ sub getUsername{
   {
     @tempData = split(/=/,$line);
     chomp ($tempData[0]);
-    {
       if($tempData[0] eq $user_ip)
       {
         chomp ($tempData[1]);
         $username = $tempData[1];
       }
-    }
+  
   }
   close FILE;
-  return $username
-
+  return $username;
 }
 
 sub isLoggedIn {
