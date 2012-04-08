@@ -141,7 +141,7 @@ sub getNumReservations
     $numReservations++;
   }
   close FILE;
-  return $numReservations;
+  return "$numReservations";
 
 }
 
