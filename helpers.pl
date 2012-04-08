@@ -140,7 +140,7 @@ sub getPlayName
 
 sub getNumSeats
 {
-  my $play_id = $_[0]
+  my $play_id = $_[0];
   my $numSeats;
   open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
   while($line=<FILE>)
