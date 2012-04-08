@@ -48,12 +48,6 @@ if (!&isLoggedIn)
 			&render('invalidlogin', { username => $params{'username'} });
 		}
 	}
-	elsif (exists $params{'logout'})
-	{
-		my $username = &getUsername();
-		&log_data("$username logged out");
-		&signout();
-	}
 	# LANDING PAGE
 	else
 	{
@@ -65,6 +59,8 @@ else # you ARE logged in
 {
 	if (exists $params{'logout'})
 	{
+		my $username = &getUsername();
+		&log_data("$username logged out");
 		&signout();
 		&render('landing');
 	}
