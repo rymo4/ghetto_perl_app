@@ -34,7 +34,20 @@ if ( exists $params{'new_username'} && exists $params{'new_password'} && exists 
 }
 elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
 {
-	&render('home', { username => $params{'new_username'} });
+	my $valid = &password_check( $params{'username'}, $params{'password'});
+	if($valid == 1)
+	{
+		&signin( $params{'username'});
+		&render('home', { username => $params{'username'} });
+	}
+	else
+	{
+		&render('invalidlogin', { username => $params{'username'} });
+	}
+}
+elsif (exists $params{'logout'})
+{
+	&signout();
 }
 # LANDING PAGE
 else
