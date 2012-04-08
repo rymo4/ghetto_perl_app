@@ -43,7 +43,7 @@ sub isNameAvailable{
 }
 
 sub getUsername{
-  my $user_ip = $_[0];
+  my $user_ip = $ENV{REMOTE_ADDR};
   my $username;
   open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
   while($line = <FILE>)
