@@ -50,12 +50,10 @@ sub getUsername{
   {
     @tempData = split(/=/,$line);
     chomp ($tempData[0]);
+    if($tempData[0] eq $user_ip)
     {
-      if($tempData[0] eq $user_ip)
-      {
-        chomp ($tempData[1]);
-        $username = $tempData[1];
-      }
+      chomp ($tempData[1]);
+      $username = $tempData[1];
     }
   }
   close FILE;
@@ -83,6 +81,72 @@ sub isLoggedIn {
 
 }
 
+sub checkAvailability {
+  my $play_id = $_[0];
+  my $numSeats = $_[1];
+  my $available = 0;
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  while($line=<FILE>)
+  {
+    @tempData = split(/=/,$line);
+    chomp ($tempData[0]);
+    if($play_id eq $tempData[0])
+    {
+      chomp ($tempData[1]);
+      seatsAvailable = int($tempData[1]);
+      if(numSeats <= seatsAvailable)
+      {
+        $available = 1;
+      }
+    }
+  }
+}
+close FILE;
+return $available;
+
+sub getPlayName
+{
+  my $play_id = $_[0];
+  my $playName;
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  while($line=<FILE>)
+  {
+    @tempData = split(/=/,$line);
+    chomp ($tempData[0]);
+    if($play_id eq $tempData[0])
+    {
+      $playName = $tempData[1];
+    }
+  }
+  close FILE;
+  return $playName;
+}
+
+sub makeReservation
+{
+  my $username = &getUsername();
+  my $play_id = $_[0];
+  my $numSeats = $_[1];
+
+  #replaces info with new number of available seats
+  my $filename = 'sessions.txt';
+  my $replace = ' ';
+
+    local @ARGV = ($filename);
+    local $^I = '.bac';
+    while( <> ){
+      if( s/$user_ip/$replace/ig ) {
+         print;
+      }
+      else {
+         print;
+      }
+   }
+
+
+
+}
+
 sub signin { #
 	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
 	my $username = $_[0];
@@ -99,7 +163,7 @@ sub signout {
    	local @ARGV = ($filename);
    	local $^I = '.bac';
    	while( <> ){
-      if( s/$user_ip/$replace/ig ) {
+      if( s/$user_ip=$_[0]/$replace/ig ) {
          print;
       }
       else {
