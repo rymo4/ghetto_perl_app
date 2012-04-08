@@ -22,11 +22,11 @@ if ( exists $params{'new_username'} && exists $params{'new_password'} && exists 
 		&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
 		&signin($params{'new_username'});
 		# user is now signed in, so render the same HTML as the Signin branch of the statement
-		&render('home', { username => $params{'new_username'} });
+		&render('home', { username => 'testing' });
 	}
 	else # FAILED REGISTRATION
 	{
-		# TODO: add errors sine your password didnt match or the username was taken
+		# TODO: add errors since your password didnt match or the username was taken
 		print($params{'new_password'});
 		print($params{'confirm_password'});
 		&render('landing');

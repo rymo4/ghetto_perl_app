@@ -1,5 +1,3 @@
-use String::Random;
-
 sub add_user { # takes username and hashed password
 	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
 	my $username = $_[0];
@@ -16,7 +14,7 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 		my @split = split(/=/, $part);
 		$form{$split[0]}=$split[1];
 	}
-	%form;
+	return %form;
 }
 
 sub signin {

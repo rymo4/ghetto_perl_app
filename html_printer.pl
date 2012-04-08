@@ -3,7 +3,7 @@ require 'layout.pl';
 sub render {
 	my $filename = $_[0];
 	if ($_[1]){
-		my %params = $_[1];
+		my $params_ref = $_[1];
 	}
 	open( FILE, "views/$filename.html" ) || die "problem opening $filename.html $!";
 	my @html = <FILE>; 
@@ -11,11 +11,13 @@ sub render {
 	my $html;
 	foreach my $line (@html)
 	{
-		$line =~ s/\$([\w-]+)/$params{$1}/g;
-		$html = $html . $line;
+			if ($line =~ /\$([\w-]+)/)
+			{
+				$line =~ s/\$([\w-]+)/$params{$1}/g;
+			}
+			$html = $html . $line;
 	}
-	
 	&layout($html);
 }
 
-1; # cause this hash to return a true value...
+1; # cause this has to return a true value...
