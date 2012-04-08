@@ -23,12 +23,13 @@ if (!&isLoggedIn)
 			# TODO: validations to make sure username does not exist, etc.
 			&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
 			&signin($params{'new_username'});
+			&log_data("New user $params{'new_username'} registered");
 			# user is now signed in, so render the same HTML as the Signin branch of the statement
 			&render('home', { username => $params{'new_username'} });
 		}
 		else # FAILED REGISTRATION
 		{
-				# TODO: add errors sine your password didnt match or the username was taken
+			&log_data("Failed registration attempt");	# TODO: add errors sine your password didnt match or the username was taken
 			&render('landing');
 		}
 
@@ -39,15 +40,19 @@ if (!&isLoggedIn)
 		if($valid == 1)
 		{
 			&signin( $params{'username'});
+			&log_data("$params{'username'} logged in");
 			&render('home', { username => $params{'username'} });
 		}
 		else
 		{
+			&log_data("$params{'username'} invalid login attempt");
 			&render('invalidlogin', { username => $params{'username'} });
 		}
 	}
 	elsif (exists $params{'logout'})
 	{
+		my $username = &getUsername();
+		&log_data("$username logged out");
 		&signout();
 	}
 	# LANDING PAGE

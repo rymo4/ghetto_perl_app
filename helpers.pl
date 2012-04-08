@@ -17,6 +17,14 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 	return %form;
 }
 
+sub log_data {
+  open (FILE, ">>logfile.txt") || die "Problem opening logfile.txt $1";
+  my $time = localtime;
+  my $user_ip = $ENV{REMOTE_ADDR}; 
+  print FILE "$_[0] at $time from IP:$user_ip\n";
+  close FILE;
+}
+
 sub isNameAvailable{
 	my $available = 1;
 	my $username = $_[0];
@@ -32,7 +40,26 @@ sub isNameAvailable{
   	}
   	close FILE;
   	return $available;
-	
+}
+
+sub getUsername{
+  my $user_ip = $_[0];
+  my $username;
+  open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
+  while($line = <FILE>)
+  {
+    @tempData = split(/=/,$line);
+    chomp ($tempData[0])
+    {
+      if($tempData[0] eq $user_ip)
+      {
+        chomp ($tempData[1])
+        $username = $tempData[1];
+      }
+    }
+  }
+  close FILE;
+  return $username
 
 }
 
@@ -40,10 +67,12 @@ sub isLoggedIn {
 
 	my $user_ip = $ENV{REMOTE_ADDR}; 
 	my $loggedIn = 0;
-	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
+	open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
 	while($line=<FILE>)
   	{
-    	if($line eq $user_ip)
+      @tempData = split(/=/,$line);
+      chomp ($tempData[0]);
+    	if($tempData[0] eq $user_ip)
     	{
       		$loggedIn = 1;
     	}
@@ -57,7 +86,7 @@ sub signin { #
 	open (FILE, ">>sessions.txt") || die "Problem opening sessions.txt $1";
 	my $username = $_[0];
 	my $user_ip = $ENV{REMOTE_ADDR};
-	print FILE "$user_ip\n";
+	print FILE "$user_ip=$username\n";
 	close FILE;
 }
 
