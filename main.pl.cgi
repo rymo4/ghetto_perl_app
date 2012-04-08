@@ -81,6 +81,12 @@ else # you ARE logged in
 
 		}
 	}
+	elsif(exists $params{'about'})
+	{
+		my $numUsers = &getNumUsers();
+		my $numReservations = &getNumReservations();
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations);
+	}
 	else
 	{
 		
