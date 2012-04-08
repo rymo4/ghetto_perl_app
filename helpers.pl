@@ -168,6 +168,9 @@ sub makeReservation
 
   #replaces info with new number of available seats
   my $filename = 'availability.txt';
+
+
+  print "$replace;"
   my $replace = "$play_id=$playName=$newNumSeats";
 
     local @ARGV = ($filename);
@@ -181,7 +184,7 @@ sub makeReservation
       }
    }
 
-   open (FILE, "reservations.txt") || die "Problem opening availability.txt $1";
+   open (FILE, ">>reservations.txt") || die "Problem opening availability.txt $1";
    print FILE "$username=$play_id=$numSeatsOrder\n";
    close FILE;
 }
