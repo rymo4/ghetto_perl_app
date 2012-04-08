@@ -109,16 +109,17 @@ sub checkAvailability {
     if($play_id eq $tempData[0])
     {
       chomp ($tempData[1]);
-      seatsAvailable = int($tempData[1]);
+      my $seatsAvailable = int($tempData[1]);
       if(numSeats <= seatsAvailable)
       {
         $available = 1;
       }
     }
   }
+	close FILE;
+	return $available;
 }
-close FILE;
-return $available;
+
 
 sub getPlayName
 {
