@@ -24,13 +24,14 @@ if (!&isLoggedIn)
 			&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
 			&signin($params{'new_username'});
 			&log_data("New user $params{'new_username'} registered");
-			# user is now signed in, so render the same HTML as the Signin branch of the statement
-			&render('home', { username => $params{'new_username'} });
+			&log_data("$params{'new_username'} logged in");
+
+			&render('home', { username => &getUsername });
 		}
 		else # FAILED REGISTRATION
 		{
 			&log_data("Failed registration attempt");	# TODO: add errors sine your password didnt match or the username was taken
-			&render('landing');
+			&render('landing', { errors => 'Make sure the password confirmation match!'});
 		}
 	}
 	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
@@ -40,12 +41,12 @@ if (!&isLoggedIn)
 		{
 			&signin( $params{'username'});
 			&log_data("$params{'username'} logged in");
-			&render('home', { username => $params{'username'} });
+			&render('home', { username => &getUsername });
 		}
 		else
 		{
 			&log_data("$params{'username'} invalid login attempt");
-			&render('invalidlogin', { username => $params{'username'} });
+			&render('landing', { errors => 'Invalid username/password combo!'});
 		}
 	}
 	# LANDING PAGE
@@ -53,7 +54,6 @@ if (!&isLoggedIn)
 	{
 		&render('landing');
 	}
-
 }
 else # you ARE logged in
 {
@@ -71,19 +71,21 @@ else # you ARE logged in
 		if(available)
 		{
 			&makeReservation($params{'play_id'}, $params{'numseats'});
-			&log_data("$username new reservation, $params{'numseats'} seats for $play invalid login attempt");
-			&render('home');
+			&log_data("$username new reservation, $params{'numseats'} seats for $play");
+			&render('home', {success => 'Reservation succesfully made'});
 		}
 		else
 		{
 			&log_data("$username failed reservation, $params{'numseats'} seats for $play insufficient availability");
-			&render('home', {success => 'Reservation succesfully made'});
+			&render('home', { errors => 'Not enough seats available for your play and time selection'});
 
 		}
 	}
 	else
 	{
-		&render('home', { errors => 'Not enough seats available for your play and time selection'});
+		
+		&render('home', { username => &getUsername });
+
 	}
 	
 }
