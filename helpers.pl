@@ -138,20 +138,41 @@ sub getPlayName
   return $playName;
 }
 
+sub getNumSeats
+{
+  my $play_id = $_[0]
+  my $numSeats;
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  while($line=<FILE>)
+  {
+    @tempData = split(/=/,$line);
+    chomp ($tempData[0]);
+    if($play_id eq $tempData[0])
+    {
+      $numSeats = int($tempData[2]);
+    }
+  }
+  close FILE;
+  return $numSeats;
+}
+
 sub makeReservation
 {
   my $username = &getUsername();
   my $play_id = $_[0];
-  my $numSeats = $_[1];
+  my $numSeatsOrder = $_[1];
+  my $numSeatsAvailable = &getNumSeats($play_id);
+  my $newNumSeats = $numSeatsAvailable - $numSeatsOrder;
+  my $playName = &getPlayName($play_id);
 
   #replaces info with new number of available seats
-  my $filename = 'sessions.txt';
-  my $replace = ' ';
+  my $filename = 'availability.txt';
+  my $replace = "$play_id=$playName=$newNumSeats";
 
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
-      if( s/$user_ip/$replace/ig ) {
+      if( s/$play_id=$play_id=$numSeats/$replace/ig ) {
          print;
       }
       else {
@@ -159,8 +180,9 @@ sub makeReservation
       }
    }
 
-
-
+   open (FILE, "reservations.txt") || die "Problem opening availability.txt $1";
+   print FILE "$username=$play_id=$numSeatsOrder\n";
+   close FILE;
 }
 
 sub signin { #
