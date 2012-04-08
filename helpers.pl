@@ -49,11 +49,11 @@ sub getUsername{
   while($line = <FILE>)
   {
     @tempData = split(/=/,$line);
-    chomp ($tempData[0])
+    chomp ($tempData[0]);
     {
       if($tempData[0] eq $user_ip)
       {
-        chomp ($tempData[1])
+        chomp ($tempData[1]);
         $username = $tempData[1];
       }
     }
@@ -67,21 +67,13 @@ sub isLoggedIn {
 
 	my $user_ip = $ENV{REMOTE_ADDR}; 
 	my $loggedIn = 0;
-<<<<<<< HEAD
+
 	open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
 	while($line=<FILE>)
   	{
       @tempData = split(/=/,$line);
       chomp ($tempData[0]);
     	if($tempData[0] eq $user_ip)
-=======
-	
-	open (FILE, "sessions.txt") || die "Problem opening sessions.txt $1";
-	while($line=<FILE>)
-  	{
-			chomp $line;
-    	if($line eq $user_ip)
->>>>>>> 5471b2cf69c81568d5b3cf85a9b177fa279cb95f
     	{
       		$loggedIn = 1;
     	}
