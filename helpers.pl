@@ -1,28 +1,15 @@
-sub output_reservations_html {
-	my @reservations = &getUserHistory;
-	my $formatted;
-
-	foreach my $res (@reservations) {
-		$formatted = $formatted . "<tr><td>$numUsers</td></tr>";
-	}
-	return $formatted;
-}
-
 sub getPlayOptions {
 	open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
 	@lines = <FILE>;
 	close FILE;
-	my $html_options;
+	$html_options;
 	foreach my $line (@lines) {
 		my @parts = split(/=/, $line);
 		my $play_id = @parts[0];
 		my $play = @parts[1];
 		my $numseats = @parts[2];
 		if (int($numseats) > 0){
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>';
-		}
-		else {
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . ' (SOLD OUT)' . '</option>';
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>'
 		}
 	}
 	return $html_options;
@@ -45,6 +32,29 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 		$form{$split[0]}=$split[1];
 	}
 	return %form;
+}
+
+sub getUserHistory
+{
+  my $username = &getUsername();
+  my @reservations;
+  open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
+  my $index =0;
+  while($line=<FILE>)
+  {
+    @tempData = split(/=/,$line);
+    chomp ($tempData[0]);
+    if($username eq $tempData[0])
+    {
+      chomp ($tempData[1]);
+      chomp ($tempData[2]);
+
+      $play = getPlayName($tempData[1]);
+      $numTickets = $tempData[2];
+      $reservatios[$index] = "$play - $numTickets tickets";
+    }
+  }
+
 }
 
 sub log_data {
@@ -112,7 +122,7 @@ sub isLoggedIn {
 
 sub checkAvailability {
   my $play_id = $_[0];
-  my $numSeats = int($_[1]);
+  my $numSeats = $_[1];
   my $available = 0;
   open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
   while($line=<FILE>)
@@ -121,10 +131,9 @@ sub checkAvailability {
     chomp ($tempData[0]);
     if($play_id eq $tempData[0])
     {
-      chomp ($tempData[2]);
-      my $seatsAvailable = int($tempData[2]);
-
-      if($numSeats <= $seatsAvailable)
+      chomp ($tempData[1]);
+      my $seatsAvailable = int($tempData[1]);
+      if(numSeats <= seatsAvailable)
       {
         $available = 1;
       }
@@ -148,14 +157,15 @@ sub getNumUsers
 
 sub getNumReservations
 {
-  my $numReservations = 0;
+  my $NumReservations = 0;
   open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
   while($line=<FILE>)
   {
     $numReservations++;
   }
   close FILE;
-  return $numReservations;
+  return "$numReservations";
+
 }
 
 sub getPlayName
@@ -178,7 +188,7 @@ sub getPlayName
 
 sub getNumSeats
 {
-  my $play_id = $_[0];
+  my $play_id = $_[0]
   my $numSeats;
   open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
   while($line=<FILE>)
@@ -203,17 +213,17 @@ sub makeReservation
   my $newNumSeats = $numSeatsAvailable - $numSeatsOrder;
   my $playName = &getPlayName($play_id);
 
-	
   #replaces info with new number of available seats
   my $filename = 'availability.txt';
 
 
- 
+  print "$replace;"
   my $replace = "$play_id=$playName=$newNumSeats";
+
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
-      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
+      if( s/$play_id=$play_id=$numSeats/$replace/ig ) {
          print;
       }
       else {
@@ -234,7 +244,7 @@ sub signin { #
 	close FILE;
 }
 
-sub signout {	# remove the line with the username in it from sessions.txt
+sub signout {
 	my $user_ip = $ENV{REMOTE_ADDR};
 	my $filename = 'sessions.txt';
 	my $replace = ' ';
@@ -251,6 +261,8 @@ sub signout {	# remove the line with the username in it from sessions.txt
    }
 }
 	
+	# remove the line with the username in it from sessions.txt
+
 
 #subroutine that checks whether the supplied password and username match an entry in the database. It relies on the MD5 algorithm to do so.
 sub password_check
