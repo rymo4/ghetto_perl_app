@@ -1,7 +1,6 @@
 sub output_reservations_html {
 	my @reservations = &getUserHistory;
 	my $formatted;
-
 	foreach my $res (@reservations) {
 		$formatted = $formatted . "<tr><td>$numUsers</td></tr>";
 	}
