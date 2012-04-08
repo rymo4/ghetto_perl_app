@@ -79,7 +79,6 @@ sub signout {
 }
 	
 	# remove the line with the username in it from sessions.txt
-}
 
 sub generate_random_string
 {

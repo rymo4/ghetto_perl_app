@@ -13,12 +13,12 @@ print "Content-type: text/html\n\n";
 
 my %params = &parse_form($POST_data);
 
-if (!$loggedIn) 
+if (!&isLoggedIn) 
 {
 	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} ) # Registration
 	{
 
-		my $available = &isNameAvailable( $params{'new_username'})
+		my $available = &isNameAvailable( $params{'new_username'});
 		if ($params{'confirm_password'} eq $params{'new_password'} && $available)
 		{
 			# TODO: validations to make sure username does not exist, etc.
@@ -60,6 +60,6 @@ if (!$loggedIn)
 }
 else
 {
-	&render('home', { username => $params{'username'} });
+	&render('landing');
 }
 
