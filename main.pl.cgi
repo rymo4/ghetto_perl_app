@@ -84,7 +84,7 @@ else # you ARE logged in
 	else
 	{
 		
-		&render('home', { username => &getUsername });
+		&render('home', { username => &getUsername, play_options => &getPlayOptions });
 
 	}
 	
