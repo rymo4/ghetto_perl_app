@@ -145,9 +145,9 @@ sub checkAvailability {
     chomp ($tempData[0]);
     if($play_id eq $tempData[0])
     {
-      chomp ($tempData[1]);
-      my $seatsAvailable = int($tempData[1]);
-      if(numSeats <= seatsAvailable)
+      chomp ($tempData[2]);
+      my $seatsAvailable = int($tempData[2]);
+      if($numSeats <= $seatsAvailable)
       {
         $available = 1;
       }
@@ -237,7 +237,7 @@ sub makeReservation
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
-      if( s/$play_id=$play_id=$numSeats/$replace/ig ) {
+      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
          print;
       }
       else {
