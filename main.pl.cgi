@@ -97,10 +97,7 @@ else # you ARE logged in
 	}
 	else
 	{
-		
 		&render('home', { username => &getUsername});
-
-	}
-	
+	}	
 }
 
