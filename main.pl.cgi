@@ -56,6 +56,11 @@ if (!&isLoggedIn)
 			&render('landing', { errors => 'Invalid username/password combo!'});
 		}
 	}
+	elsif (exists $params{'forgot_username'})
+	{
+		&send_password_reset_email($params{'forgot_username'});
+		&render('landing', { success => 'Great! Now check your email for your new password! Remember to change it right away!' });
+	}
 	# LANDING PAGE
 	else
 	{

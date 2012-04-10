@@ -22,13 +22,13 @@ my $PLAYID_COLUMN = 0;
 my $PLAYNAME_COLUMN = 1;
 my $NUMTICKS_COLUM = 2;
 
-
 sub send_password_reset_email {
-	my $email = &getEmail;
+	my $username = shift;
+	my $email = &getEmail($username);
 	my $password = &generate_random_string(10);
-	&resetPassword($password);
+	&resetPassword($username, $password);
 	my $message = "You have requested to reset your password. Your new password is $password. Please use this once and then change your password for security.";
-	open (MAILH, "|mail -s \"Reset Your Password\"$password") || die "cant open mail handle, quitting";
+	open (MAILH, "|mail -s \"Reset Your Password\" $email") || die "cant open mail handle, quitting";
 	print MAILH "$message";
 	close(MAILH);
 }
