@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+
 use Digest::MD5 qw(md5 md5_hex md5_base64);
-=======
+
 sub send_password_reset_email {
 	my $email = &getEmail;
 	my $password = &generate_random_string(10);
@@ -21,7 +21,6 @@ sub generate_random_string
 	}
 	return $random_string;
 }
->>>>>>> 0cb3fbcfce83f067fe7822ef30b403c4b91fa191
 
 sub output_reservations_html {
 	my @reservations = &getUserHistory;
@@ -154,7 +153,15 @@ sub checkValidEmail{
 
 sub getEmail{
   my $email;
-  my $username = &getUsername();
+  my $username;
+  if($_[0])
+  {
+    $username = $_[0];
+  }
+  else
+  {
+    $username = &getUsername();
+  }
   open (FILE, "users.txt") || die "Problem opening users.txt $1";
   my @lines = <FILE>;
   close FILE;
@@ -169,8 +176,8 @@ sub getEmail{
 }
 
 sub resetPassword{
-  my $newPassword = md5_hex($_[0]);
-  my $username = &getUsername();
+  my $newPassword = md5_hex($_[1]);
+  my $username = &_[0];
   my $email = &getEmail();
 
   my $filename = 'users.txt';
