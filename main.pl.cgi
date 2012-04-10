@@ -58,7 +58,7 @@ if (!&isLoggedIn)
 	elsif (exists $params{'forgot_username'})
 	{
 		&send_password_reset_email($params{'forgot_username'});
-		&log_data("$username requested automatic password change");
+		&log_data("$params{'forgot_username'} requested automatic password change");
 		&render('landing', { success => 'Great! Now check your email for your new password! Remember to change it right away!' });
 	}
 	# LANDING PAGE
