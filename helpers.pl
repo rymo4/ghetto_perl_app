@@ -1,6 +1,7 @@
 sub send_password_reset_email {
 	my $email = &getEmail;
 	my $password = &generate_random_string(10);
+	&resetPassword($password);
 	my $message = "You have requested to reset your password. Your new password is $password. Please use this once and then change your password for security.";
 	open (MAILH, "|mail -s \"Reset Your Password\"$password") || die "cant open mail handle, quitting";
 	print MAILH "$message";
