@@ -46,12 +46,48 @@ sub generate_random_string
 }
 
 sub output_reservations_html {
-	my @reservations = &getUserHistory;
+	my %reservations = &getUserHistory;
 	my $formatted;
-	foreach my $res (@reservations) {
-		$formatted = $formatted . "<tr><td>$res</td></tr>";
+	foreach my $res (keys %reservations) {
+		$formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';
+		$formatted .= <<"END_OF_PRINTING";
+				<tr>
+					<td>
+						<form action="main.pl.cgi" method=POST>
+						<input type="hidden" name="delete_reservation_id" value="$res">
+						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$res}">
+						<input type="submit" value="Stats" class="btn btn-danger">
+						</form>
+					</td>
+				</tr>
+END_OF_PRINTING
+	
 	}
 	return $formatted;
+}
+
+sub getUserHistory
+{
+  my $username = &getUsername();
+  my %reservations;
+  open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
+	my @lines = <FILE>;
+	close FILE;
+  foreach my $line (@lines)
+  {
+    my @reservationDatabase = split(/=/,$line);
+    chomp ($reservationDatabase[$USER_COLUMN]);
+    if($username eq $reservationDatabase[$USER_COLUMN])
+    {
+      chomp ($reservationDatabase[$PLAYID_COLUMN]);
+      chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
+
+      $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
+      $reservations[$reservationDatabase[$RESID_COLUMN]] = $numTickets;
+
+    }
+  }
+	return %reservations;
 }
 
 sub getPlayOptions {
@@ -64,16 +100,20 @@ sub getPlayOptions {
 		my $play_id = @parts[0];
 		my $play = @parts[1];
 		my $numseats = @parts[2];
-		if (int($numseats) > 0){
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>';
+		
+		if (int($numseats) > 0)
+		{
+			$html_options .= '<option value="' . $play_id . '">' . $play . '</option>';			
 		}
 		else
 		{
-				$html_options = $html_options . '<option value="' . $play_id . '">' . $play .' (SOLD OUT)' . '</option>';
+				$html_options .= '<option value="' . $play_id . '">' . $play .' (SOLD OUT)' . '</option>';
 		}
 	}
 	return $html_options;
 }
+
+
 
 sub add_user { # takes username and hashed password
 	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
@@ -96,31 +136,7 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 	return %form;
 }
 
-sub getUserHistory
-{
-  my $username = &getUsername();
-  my @reservations;
-  open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
-  my $index =0;
-	my @lines = <FILE>;
-	close FILE;
-  foreach my $line (@lines)
-  {
-    my @reservationDatabase = split(/=/,$line);
-    chomp ($reservationDatabase[$USER_COLUMN]);
-    if($username eq $reservationDatabase[$USER_COLUMN])
-    {
-      chomp ($reservationDatabase[$PLAYID_COLUMN]);
-      chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
 
-      $play = getPlayName($reservationDatabase[$RESID_COLUMN]);
-      $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
-      $reservations[$index] = "$play - $numTickets tickets";
-			$index++;
-    }
-  }
-	return @reservations;
-}
 
 sub log_data {
   open (FILE, ">>logfile.txt") || die "Problem opening logfile.txt $1";
