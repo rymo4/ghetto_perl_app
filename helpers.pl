@@ -177,7 +177,15 @@ sub checkValidEmail{
 
 sub getEmail{
   my $email;
-  my $username = &getUsername();
+  my $username;
+  if($_[0])
+  {
+    $username = $_[0];
+  }
+  else
+  {
+    $username = &getUsername();
+  }
   open (FILE, "users.txt") || die "Problem opening users.txt $1";
   my @lines = <FILE>;
   close FILE;
@@ -192,8 +200,8 @@ sub getEmail{
 }
 
 sub resetPassword{
-  my $newPassword = md5_hex($_[0]);
-  my $username = &getUsername();
+  my $newPassword = md5_hex($_[1]);
+  my $username = &_[0];
   my $email = &getEmail();
 
   my $filename = 'users.txt';
