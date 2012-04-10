@@ -58,6 +58,7 @@ if (!&isLoggedIn)
 	elsif (exists $params{'forgot_username'})
 	{
 		&send_password_reset_email($params{'forgot_username'});
+		&log_data("$username requested automatic password change");
 		&render('landing', { success => 'Great! Now check your email for your new password! Remember to change it right away!' });
 	}
 	# LANDING PAGE
@@ -103,20 +104,23 @@ else # you ARE logged in
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
-		&render('stats', { email => $email , username => $username, reservations => &output_reservations_html });
+		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
 	}
-	elsif(exists $params{'forgot_username')
+	elsif(exists $params{'forgot_username'})
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
+		my $reservations = &output_reservations_html();
 		if ($params{'confirm_password'} eq $params{'new_password'})
 		{
+			my $password = $params{'new_password'};
 			&resetPassword($username, $password);
-			&render('stats', { email => $email , username => $username, reservations => &output_reservations_html,  success => 'Password succesfully changed'});
+			&log_data("$username manually changed password");
+			&render('stats', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed'});
 		}
 		else
 		{
-			&render('stats', { email => $email , username => $username, reservations => &output_reservations_html,  errors => 'Passwords entered dont match'});
+			&render('profile', { email => $email , username => $username, reservations => $reservations,  errors => 'Passwords entered dont match'});
 		}
 		
 	}

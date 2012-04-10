@@ -108,13 +108,13 @@ sub getUserHistory
   {
     my @reservationDatabase = split(/=/,$line);
     chomp ($reservationDatabase[$USER_COLUMN]);
-    if($username eq $tempData[$USER_COLUMN])
+    if($username eq $reservationDatabase[$USER_COLUMN])
     {
-      chomp ($tempData[$PLAYID_COLUMN]);
-      chomp ($tempData[$NUMTICKS_COLUMN]);
+      chomp ($reservationDatabase[$PLAYID_COLUMN]);
+      chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
 
-      $play = getPlayName($tempData[$PLAYID_COLUMN]);
-      $numTickets = $tempData[$NUMTICKS_COLUMN];
+      $play = getPlayName($reservationDatabase[$RESID_COLUMN]);
+      $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
       $reservations[$index] = "$play - $numTickets tickets";
 			$index++;
     }
@@ -195,7 +195,6 @@ sub getEmail{
     chomp ($userDatabase[$EMAIL_COLUMN]);
     $email = $userDatabase[$EMAIL_COLUMN];
   }
-  print $email;
   return $email;
 }
 
