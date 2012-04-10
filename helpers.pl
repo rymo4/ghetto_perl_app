@@ -122,6 +122,47 @@ sub getUserHistory
 	return @reservations;
 }
 
+sub cancelReservation
+{
+  my $play_id = $_[0];
+  my $numTickets = $_[1];
+  my $username = &getUsername();
+
+  my $numSeatsAvailable = &getNumSeats($play_id);
+  my $newNumSeats = $numSeatsAvailable + $numTickets;
+  my $playName = &getPlayName($play_id);
+
+  #updates database adding th enew number of seats available
+  my $filename = 'availability.txt';
+  my $replace = "$play_id=$playName=$newNumSeats";
+
+    local @ARGV = ($filename);
+    local $^I = '.bac';
+    while( <> ){
+      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
+         print;
+      }
+      else {
+         print;
+      }
+   }
+
+  my $filename = 'reservations.txt';
+  my $replace = "";
+
+    local @ARGV = ($filename);
+    local $^I = '.bac';
+    while( <> ){
+      if( s/$username=$play_id=$numTickets/$replace/ig ) {
+         print;
+      }
+      else {
+         print;
+      }
+   }
+
+}
+
 sub log_data {
   open (FILE, ">>logfile.txt") || die "Problem opening logfile.txt $1";
   my $time = localtime;

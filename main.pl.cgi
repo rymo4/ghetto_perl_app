@@ -100,6 +100,13 @@ else # you ARE logged in
 		my $numReservations = &getNumReservations();
 		&render('stats', { numUsers => $numUsers , numReservations => $numReservations});
 	}
+	elsif(exists $params{'delete_reservation_id'} && exists $params{'delete_reservation_tickets'})
+	{
+		my $username = &getUsername();
+		my $email = &getEmail();
+		&cancelReservation($params{'delete_reservation_id'}, $params{'delete_reservation_tickets'});
+		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
+	}
 	elsif(exists $params{'profile'})
 	{
 		my $username = &getUsername();
