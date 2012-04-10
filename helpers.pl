@@ -1,6 +1,28 @@
-<<<<<<< HEAD
+
 use Digest::MD5 qw(md5 md5_hex md5_base64);
-=======
+
+#DATABASE CONSTANTS
+
+#USER DATABASE
+my $USER_COLUMN = 0;
+my $PASSWORD_COLUMN = 1;
+my $EMAIL_COLUMN = 2;
+
+#SESSIONS DATABASE
+my $IP_COLUMN = 0;
+my $IPUSER_COLUMN = 1;
+
+#RESERVATION DATABASE
+my $USER_COLUMN = 0;
+my $RESID_COLUMN = 1;
+my $NUMTICKS_COLUMN = 2;
+
+#AVAILABILITY DATABASE
+my $PLAYID_COLUMN = 0;
+my $PLAYNAME_COLUMN = 1;
+my $NUMTICKS_COLUM = 2;
+
+
 sub send_password_reset_email {
 	my $email = &getEmail;
 	my $password = &generate_random_string(10);
@@ -22,7 +44,6 @@ sub generate_random_string
 	}
 	return $random_string;
 }
->>>>>>> 0cb3fbcfce83f067fe7822ef30b403c4b91fa191
 
 sub output_reservations_html {
 	my @reservations = &getUserHistory;
@@ -69,6 +90,7 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 	my %form;
 	foreach my $part (@parted) {
 		my @split = split(/=/, $part);
+		$split[1] =~ s/\%([A-Fa-f0-9]{2})/pack('C', hex($1))/seg;
 		$form{$split[0]}=$split[1];
 	}
 	return %form;
@@ -85,14 +107,14 @@ sub getUserHistory
   foreach my $line (@lines)
   {
     my @reservationDatabase = split(/=/,$line);
-    chomp ($reservationDatabase[USER_COLUMN]);
-    if($username eq $tempData[USER_COLUMN])
+    chomp ($reservationDatabase[$USER_COLUMN]);
+    if($username eq $tempData[$USER_COLUMN])
     {
-      chomp ($tempData[PLAYID_COLUMN]);
-      chomp ($tempData[NUMTICKS_COLUMN]);
+      chomp ($tempData[$PLAYID_COLUMN]);
+      chomp ($tempData[$NUMTICKS_COLUMN]);
 
-      $play = getPlayName($tempData[PLAYID_COLUMN]);
-      $numTickets = $tempData[NUMTICKS_COLUMN];
+      $play = getPlayName($tempData[$PLAYID_COLUMN]);
+      $numTickets = $tempData[$NUMTICKS_COLUMN];
       $reservations[$index] = "$play - $numTickets tickets";
 			$index++;
     }
@@ -115,8 +137,8 @@ sub isNameAvailable{
 	while($line=<FILE>)
   	{
     	my @userDatabase = split(/=/,$line);
-    	chomp ($userDatabase[USER_COLUMN]);
-    	if($username eq $userDatabase[USER_COLUMN])
+    	chomp ($userDatabase[$USER_COLUMN]);
+    	if($username eq $userDatabase[$USER_COLUMN])
     	{
       		$available = 0;
     	}
@@ -162,8 +184,8 @@ sub getEmail{
   foreach my $line (@lines)
   {
     @userDatabase = split(/=/,$line);
-    chomp ($userDatabase[EMAIL_COLUMN]);
-    $email = $userDatabase[EMAIL_COLUMN];
+    chomp ($userDatabase[$EMAIL_COLUMN]);
+    $email = $userDatabase[$EMAIL_COLUMN];
   }
   print $email;
   return $email;
@@ -193,7 +215,7 @@ sub resetPassword{
   foreach my $line (@lines)
   {
       @userDatabase = split(/=/,$line);
-
+	}
 
 }
 
@@ -386,26 +408,6 @@ sub password_check
   return $valid;
 }
 
-#DATABASE CONSTANTS
-
-#USER DATABASE
-my $USER_COLUMN = 0;
-my $PASSWORD_COLUMN = 1;
-my $EMAIL_COLUMN = 2;
-
-#SESSIONS DATABASE
-my $IP_COLUMN = 0;
-my $IPUSER_COLUMN = 1;
-
-#RESERVATION DATABASE
-my $USER_COLUMN = 0;
-my $RESID_COLUMN = 1;
-my $NUMTICKS_COLUMN = 2;
-
-#AVAILABILITY DATABASE
-my $PLAYID_COLUMN = 0;
-my $PLAYNAME_COLUMN = 1;
-my $NUMTICKS_COLUM =2;
 
 1;
 
