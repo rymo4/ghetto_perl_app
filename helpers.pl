@@ -1,3 +1,23 @@
+sub send_password_reset_email {
+	my $email = &getEmail;
+	my $password = &generate_random_string(10);
+	my $message = "You have requested to reset your password. Your new password is $password. Please use this once and then change your password for security.";
+	open (MAILH, "|mail -s \"Reset Your Password\"$password") || die "cant open mail handle, quitting";
+	print MAILH "$message";
+	close(MAILH);
+}
+
+sub generate_random_string
+{
+	my $length = shift;
+	my @chars=('a'..'z','A'..'Z','0'..'9','_', '!'..'*');
+	my $random_string;
+	foreach (1..$length) 
+	{
+		$random_string.=$chars[rand @chars];
+	}
+	return $random_string;
+}
 
 sub output_reservations_html {
 	my @reservations = &getUserHistory;
@@ -19,7 +39,11 @@ sub getPlayOptions {
 		my $play = @parts[1];
 		my $numseats = @parts[2];
 		if (int($numseats) > 0){
-			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>'
+			$html_options = $html_options . '<option value="' . $play_id . '">' . $play . '</option>';
+		}
+		else
+		{
+				$html_options = $html_options . '<option value="' . $play_id . '">' . $play .' (SOLD OUT)' . '</option>';
 		}
 	}
 	return $html_options;
