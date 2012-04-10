@@ -116,7 +116,7 @@ else # you ARE logged in
 			my $password = $params{'new_password'};
 			&resetPassword($username, $password);
 			&log_data("$username manually changed password");
-			&render('stats', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed'});
+			&render('profile', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed'});
 		}
 		else
 		{
