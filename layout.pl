@@ -1,7 +1,13 @@
+require 'helpers.pl';
 sub layout { # takes 1 string that contains what to insert in $yield
 	my $yield = $_[0];
 	my $errors = $_[1];
 	my $success = $_[2];
+	my $logout_button;
+	if (&isLoggedIn){
+		$logout_button = '<li><a href="javascript:document.logout.submit()">Logout</a></li>';	
+	}
+		
 	if ($errors){
 		$errors = '<div class="alert alert-error">' . $errors . '</div>';
 	}
@@ -20,7 +26,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			  <div class="navbar-inner">
 			    <div class="container">
 			      <ul class="nav">
-						  <li><a href="#">Link</a></li>
+						 	$logout_button
 						  <li><a href="#">Link</a></li>
 						</ul>
 			    </div>
@@ -30,6 +36,9 @@ sub layout { # takes 1 string that contains what to insert in $yield
 				$success
 				$errors
 				$yield
+			</div>
+			<div class="hidden">
+					<form name="logout" action="main.pl.cgi" method=POST class="unstyled"><input type="hidden" name="logout"></form>
 			</div>
 		</body>
 	</html>

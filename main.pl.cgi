@@ -18,6 +18,7 @@ if (!&isLoggedIn)
 	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} && exists $params{'email'}) # Registration
 	{
 		my $available = &isNameAvailable( $params{'new_username'});
+		print $params{'email'};
 		my $validEmail = &checkValidEmail( $params{'email'});
 		if ($params{'confirm_password'} eq $params{'new_password'} && $available && $validEmail)
 		{
@@ -93,7 +94,7 @@ else # you ARE logged in
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
 		my $email = &getEmail();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, email => $email, $reservations => &output_reservations_html });
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, email => $email, reservations => &output_reservations_html });
 	}
 	else
 	{
