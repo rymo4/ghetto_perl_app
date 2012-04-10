@@ -1,3 +1,4 @@
+use Digest::MD5 qw(md5 md5_hex md5_base64);
 
 sub output_reservations_html {
 	my @reservations = &getUserHistory;
@@ -29,7 +30,8 @@ sub add_user { # takes username and hashed password
 	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
 	my $username = $_[0];
 	my $hashed_password = $_[1];
-	print FILE "$username=$hashed_password\n";
+  my $email = $_[2];
+	print FILE "$username=$hashed_password=$email\n";
 	close FILE;
 }
 
@@ -54,17 +56,16 @@ sub getUserHistory
 	close FILE;
   foreach my $line (@lines)
   {
-    my @tempData = split(/=/,$line);
-    chomp ($tempData[0]);
-    if($username eq $tempData[0])
+    my @reservationDatabase = split(/=/,$line);
+    chomp ($reservationDatabase[USER_COLUMN]);
+    if($username eq $tempData[USER_COLUMN])
     {
-      chomp ($tempData[1]);
-      chomp ($tempData[2]);
+      chomp ($tempData[PLAYID_COLUMN]);
+      chomp ($tempData[NUMTICKS_COLUMN]);
 
-      $play = getPlayName($tempData[1]);
-      $numTickets = $tempData[2];
+      $play = getPlayName($tempData[PLAYID_COLUMN]);
+      $numTickets = $tempData[NUMTICKS_COLUMN];
       $reservations[$index] = "$play - $numTickets tickets";
-			my $temp = $reservations[$index];
 			$index++;
     }
   }
@@ -85,9 +86,9 @@ sub isNameAvailable{
 	open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
 	while($line=<FILE>)
   	{
-    	my @tempData = split(/=/,$line);
-    	chomp ($tempData[0]);
-    	if($username eq $tempData[0])
+    	my @userDatabase = split(/=/,$line);
+    	chomp ($userDatabase[USER_COLUMN]);
+    	if($username eq $userDatabase[USER_COLUMN])
     	{
       		$available = 0;
     	}
@@ -112,6 +113,60 @@ sub getUsername{
   }
   close FILE;
   return $username;
+}
+
+sub checkValidEmail{
+  my $email = $_[0];
+  my $valid = 0;
+  if ($email=~/(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/)
+  {
+    $valid = 1;
+  }
+  return $valid;
+}
+
+sub getEmail{
+  my $email;
+  my $username = &getUsername();
+  open (FILE, "users.txt") || die "Problem opening users.txt $1";
+  my @lines = <FILE>;
+  close FILE;
+  foreach my $line (@lines)
+  {
+    @userDatabase = split(/=/,$line);
+    chomp ($userDatabase[EMAIL_COLUMN]);
+    $email = $userDatabase[EMAIL_COLUMN];
+  }
+  print $email;
+  return $email;
+}
+
+sub resetPassword{
+  my $newPassword = md5_hex($_[0]);
+  my $username = &getUsername();
+  my $email = &getEmail();
+
+  my $filename = 'users.txt';
+
+    local @ARGV = ($filename);
+    local $^I = '.bac';
+    while( <> ){
+      if( s/$username=.*/$username=$newPassword=$email/ig ) {
+         print;
+      }
+      else {
+         print;
+      }
+   }
+
+  open (FILE, ">>users.txt") || die "Problem opening users.txt $1";
+  my @lines = <FILE>;
+  close FILE;
+  foreach my $line (@lines)
+  {
+      @userDatabase = split(/=/,$line);
+
+
 }
 
 sub isLoggedIn {
@@ -302,6 +357,27 @@ sub password_check
   close FH1;
   return $valid;
 }
+
+#DATABASE CONSTANTS
+
+#USER DATABASE
+my $USER_COLUMN = 0;
+my $PASSWORD_COLUMN = 1;
+my $EMAIL_COLUMN = 2;
+
+#SESSIONS DATABASE
+my $IP_COLUMN = 0;
+my $IPUSER_COLUMN = 1;
+
+#RESERVATION DATABASE
+my $USER_COLUMN = 0;
+my $RESID_COLUMN = 1;
+my $NUMTICKS_COLUMN = 2;
+
+#AVAILABILITY DATABASE
+my $PLAYID_COLUMN = 0;
+my $PLAYNAME_COLUMN = 1;
+my $NUMTICKS_COLUM =2;
 
 1;
 

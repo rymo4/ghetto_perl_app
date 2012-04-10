@@ -15,23 +15,29 @@ my %params = &parse_form($POST_data);
 
 if (!&isLoggedIn) 
 {
-	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} ) # Registration
+	if ( exists $params{'new_username'} && exists $params{'new_password'} && exists $params{'confirm_password'} && exists $params{'email'}) # Registration
 	{
 		my $available = &isNameAvailable( $params{'new_username'});
-		if ($params{'confirm_password'} eq $params{'new_password'} && $available)
+		my $validEmail = &checkValidEmail( $params{'email'});
+		if ($params{'confirm_password'} eq $params{'new_password'} && $available && $validEmail)
 		{
 			# TODO: validations to make sure username does not exist, etc.
-			&add_user($params{'new_username'}, md5_hex($params{'new_password'}));
+			&add_user($params{'new_username'}, md5_hex($params{'new_password'}), $params{'email'});
 			&signin($params{'new_username'});
 			&log_data("New user $params{'new_username'} registered");
 			&log_data("$params{'new_username'} logged in");
 
 			&render('home', { username => &getUsername });
 		}
+		elsif (!$validEmail)
+		{
+			&log_data("Failed registration attempt");
+			&render('landing', { errors => 'Make sure the email entered is a valid one!'});
+		}
 		else # FAILED REGISTRATION
 		{
 			&log_data("Failed registration attempt");	# TODO: add errors sine your password didnt match or the username was taken
-			&render('landing', { errors => 'Make sure the password confirmation match!'});
+			&render('landing', { errors => 'Make sure the passwords match!'});
 		}
 	}
 	elsif ( exists $params{'username'} && exists $params{'password'} ) # Signin
@@ -86,7 +92,8 @@ else # you ARE logged in
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, reservations => &output_reservations_html });
+		my $email = &getEmail();
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, email => $email, $reservations => &output_reservations_html });
 	}
 	else
 	{
