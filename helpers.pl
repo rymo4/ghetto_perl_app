@@ -201,7 +201,7 @@ sub getEmail{
 
 sub resetPassword{
   my $newPassword = md5_hex($_[1]);
-  my $username = &_[0];
+  my $username = $_[0];
   my $email = &getEmail();
 
   my $filename = 'users.txt';
