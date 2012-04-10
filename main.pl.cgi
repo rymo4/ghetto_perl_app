@@ -97,8 +97,28 @@ else # you ARE logged in
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations});
+	}
+	elsif(exists $params{'profile'})
+	{
+		my $username = &getUsername();
 		my $email = &getEmail();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, email => $email, reservations => &output_reservations_html });
+		&render('stats', { email => $email , username => $username, reservations => &output_reservations_html });
+	}
+	elsif(exists $params{'forgot_username')
+	{
+		my $username = &getUsername();
+		my $email = &getEmail();
+		if ($params{'confirm_password'} eq $params{'new_password'})
+		{
+			&resetPassword($username, $password);
+			&render('stats', { email => $email , username => $username, reservations => &output_reservations_html,  success => 'Password succesfully changed'});
+		}
+		else
+		{
+			&render('stats', { email => $email , username => $username, reservations => &output_reservations_html,  errors => 'Passwords entered dont match'});
+		}
+		
 	}
 	else
 	{

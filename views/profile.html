@@ -1,0 +1,32 @@
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>User Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$username</td>
+      <td>$email</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1> Would you like to reset your password? </h1>
+<form action="main.pl.cgi" method=POST>
+<input type="password" name="new_password" placeholder="Your Password">
+<input type="password" name="confirm_password" placeholder="And Again...">
+<input type="hidden" name="forgot_username">
+<input type="submit" value="Reset Password" class="btn btn-primary btn-large"></form>
+
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Reservations</th>
+    </tr>
+  </thead>
+  <tbody>
+    $reservations
+  </tbody>
+</table>
