@@ -44,7 +44,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			<div class="hidden">
 					<form name="logout" action="main.pl.cgi" method=POST class="unstyled"><input type="hidden" name="logout"></form>
 					<form name="profile" action="main.pl.cgi" method=POST><input type="hidden" name="profile"></form>
-					<form name="stats" action="main.pl.cgi" method=POST><input type="hidden" name="Stats"></form>
+					<form name="stats" action="main.pl.cgi" method=POST><input type="hidden" name="stats"></form>
 					
 					
 			</div>

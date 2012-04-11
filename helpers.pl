@@ -85,6 +85,7 @@ sub output_reservations_html {
 							<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
+				</tr>
 END_OF_PRINTING
 	$index++;
 	}
@@ -114,11 +115,26 @@ sub getUserHistory {
 	return (\@reservation_ids, \@num_tickets);
 }
 
+sub output_reservations_raw {
+		my ($reservation_ids_ref, $num_tickets_ref) = &getUserHistory;
+		my @reservation_ids = @$reservation_ids_ref;
+		my @num_tickets = @$num_tickets_ref;
+		my @resevations;
+		my $index = 0;
+		foreach my $play_id (@reservation_ids) {
+			my $res = &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets';
+			push(@reservations, $res);
+			$index++;
+		}
+		return @reservations;
+}
 sub output_availability_html {
-  my %reservations = &getUserHistory;
+  my $hash_ref = &getTicketAvailability;
+	my %plays = %$hash_ref;
   my $formatted;
-  foreach my $res (keys %reservations) {
-    $formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';  
+  foreach my $id (keys %plays) {
+		
+    $formatted .= '<tr><td>' . &getPlayName($id) . ' - ' . $plays{$id} . ' tickets left</td></tr>';  
   }
   return $formatted;
 }
@@ -131,20 +147,12 @@ sub getTicketAvailability {
   foreach my $line (@lines)
   {
     my @availabilityDatabase = split(/=/,$line);
-    chomp ($availabilityDatabase[$USER_COLUMN]);
-    if($username eq $availabilityDatabase[$USER_COLUMN])
-    {
-      chomp ($availabilityDatabase[$PLAYID_COLUMN]);
-      chomp ($availabilityDatabase[$NUMTICKS_COLUMN]);
-
-      $numTickets = $availabilityDatabase[$NUMTICKS_COLUMN];
-      $reservations{$availabilityDatabase[$RESID_COLUMN]} = $numTickets;
-
-    }
+    chomp ($availabilityDatabase[$PLAYID_COLUMN]);
+    chomp ($availabilityDatabase[$NUMTICKS_COLUMN]);
+    $numTickets = $availabilityDatabase[$NUMTICKS_COLUMN];
+    $reservations{$availabilityDatabase[$PLAYID_COLUMN]} = $numTickets;
   }
-  return %reservations;
-
-
+  return \%reservations;
 }
 
 sub getPlayOptions {
@@ -227,10 +235,12 @@ sub cancelReservation
     local $^I = '.bac';
 		$beenFound = 0;
     while( <>){
-      if( s/$username=$play_id=$numTickets/$replace/ig && !$beenFound ) {
-        print;
-				$beenFound = 1;
-      }
+ 
+				if(!$beenFound && s/$username=$play_id=$numTickets/$replace/ig )
+				{
+					print;
+					$beenFound = 1;
+				}
       else {
          print;
       }

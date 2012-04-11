@@ -94,7 +94,7 @@ else # you ARE logged in
 
 		}
 	}
-	elsif(exists $params{'about'})
+	elsif(exists $params{'stats'}) # STATS PAGE
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
