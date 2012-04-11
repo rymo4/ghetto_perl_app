@@ -48,15 +48,14 @@ sub generate_random_string
 sub output_reservations_html {
 	my %reservations = &getUserHistory;
 	my $formatted;
-	foreach my $res (keys %reservations) {
-		$formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';
+	foreach my $play_id (keys %reservations) {
+		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $reservations{$play_id} . ' tickets</td>';
 		$formatted .= <<"END_OF_PRINTING";
-				<tr>
 					<td>
 						<form action="main.pl.cgi" method=POST>
-						<input type="hidden" name="delete_reservation_id" value="$res">
-						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$res}">
-						<input type="submit" value="Stats" class="btn btn-danger">
+						<input type="hidden" name="delete_reservation_id" value="$play_id">
+						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$play_id}">
+						<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
 				</tr>
@@ -83,7 +82,7 @@ sub getUserHistory
       chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
 
       $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
-      $reservations[$reservationDatabase[$RESID_COLUMN]] = $numTickets;
+      $reservations{$reservationDatabase[$RESID_COLUMN]} = $numTickets;
 
     }
   }
