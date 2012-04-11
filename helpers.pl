@@ -33,8 +33,7 @@ sub send_password_reset_email {
 	close(MAILH);
 }
 
-sub generate_random_string
-{
+sub generate_random_string {
 	my $length = shift;
 	my @chars=('a'..'z','A'..'Z','0'..'9','_', '!'..'*');
 	my $random_string;
@@ -48,14 +47,15 @@ sub generate_random_string
 sub output_reservations_html {
 	my %reservations = &getUserHistory;
 	my $formatted;
-	foreach my $play_id (keys %reservations) {
-		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $reservations{$play_id} . ' tickets</td>';
+	foreach my $res (keys %reservations) {
+		$formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';
 		$formatted .= <<"END_OF_PRINTING";
+				<tr>
 					<td>
 						<form action="main.pl.cgi" method=POST>
-						<input type="hidden" name="delete_reservation_id" value="$play_id">
-						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$play_id}">
-						<input type="submit" value="Delete" class="btn btn-danger">
+						<input type="hidden" name="delete_reservation_id" value="$res">
+						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$res}">
+						<input type="submit" value="Stats" class="btn btn-danger">
 						</form>
 					</td>
 				</tr>
@@ -65,8 +65,7 @@ END_OF_PRINTING
 	return $formatted;
 }
 
-sub getUserHistory
-{
+sub getUserHistory {
   my $username = &getUsername();
   my %reservations;
   open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
@@ -87,6 +86,39 @@ sub getUserHistory
     }
   }
 	return %reservations;
+}
+
+sub output_availability_html {
+  my %reservations = &getUserHistory;
+  my $formatted;
+  foreach my $res (keys %reservations) {
+    $formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';  
+  }
+  return $formatted;
+}
+
+sub getTicketAvailability {
+  my %reservations;
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  my @lines = <FILE>;
+  close FILE;
+  foreach my $line (@lines)
+  {
+    my @availabilityDatabase = split(/=/,$line);
+    chomp ($availabilityDatabase[$USER_COLUMN]);
+    if($username eq $availabilityDatabase[$USER_COLUMN])
+    {
+      chomp ($availabilityDatabase[$PLAYID_COLUMN]);
+      chomp ($availabilityDatabase[$NUMTICKS_COLUMN]);
+
+      $numTickets = $availabilityDatabase[$NUMTICKS_COLUMN];
+      $reservations{$availabilityDatabase[$RESID_COLUMN]} = $numTickets;
+
+    }
+  }
+  return %reservations;
+
+
 }
 
 sub getPlayOptions {
