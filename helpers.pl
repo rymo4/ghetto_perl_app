@@ -46,21 +46,24 @@ sub generate_random_string
 }
 
 sub output_reservations_html {
-	my %reservations = &getUserHistory;
+	my @parts = &getUserHistory;
+	my @reservation_ids = $parts[0];
+	my @num_tickets = $parts[1];
 	my $formatted;
-	foreach my $play_id (keys %reservations) {
-		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $reservations{$play_id} . ' tickets</td>';
+	my $index = 0;
+	foreach my $play_id (@reservation_ids) {
+		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets</td>';
 		$formatted .= <<"END_OF_PRINTING";
 					<td>
 						<form action="main.pl.cgi" method=POST>
 						<input type="hidden" name="delete_reservation_id" value="$play_id">
-						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$play_id}">
+						<input type="hidden" name="delete_reservation_tickets" value="$num_tickets[$index]">
 						<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
 				</tr>
 END_OF_PRINTING
-	
+	$index++;
 	}
 	return $formatted;
 }
@@ -68,7 +71,7 @@ END_OF_PRINTING
 sub getUserHistory
 {
   my $username = &getUsername();
-  my %reservations;
+  my (@reservation_ids, @num_tickets);
   open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
 	my @lines = <FILE>;
 	close FILE;
@@ -80,13 +83,12 @@ sub getUserHistory
     {
       chomp ($reservationDatabase[$PLAYID_COLUMN]);
       chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
-
       $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
-      $reservations{$reservationDatabase[$RESID_COLUMN]} = $numTickets;
-
+			push(@reservation_ids, $reservationDatabase[$RESID_COLUMN]);
+			push(@num_tickets, $numTickets);
     }
   }
-	return %reservations;
+	return (@reservation_ids, @num_tickets);
 }
 
 sub getPlayOptions {
