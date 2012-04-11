@@ -53,7 +53,6 @@ sub output_reservations_html {
 	foreach my $play_id (@reservation_ids) {
 		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets</td>';
 		$formatted .= <<"END_OF_PRINTING";
-				<tr>
 					<td>
 						<form action="main.pl.cgi" method=POST>
 							<input type="hidden" name="delete_reservation_id" value="$play_id">
@@ -61,7 +60,6 @@ sub output_reservations_html {
 							<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
-				</tr>
 END_OF_PRINTING
 	$index++;
 	}
