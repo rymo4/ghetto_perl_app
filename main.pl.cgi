@@ -98,7 +98,7 @@ else # you ARE logged in
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, tickets_available => &output_availability });
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, tickets_available => &output_availability_html });
 	}
 	elsif(exists $params{'delete_reservation_id'} && exists $params{'delete_reservation_tickets'})
 	{

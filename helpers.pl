@@ -1,5 +1,6 @@
-
+#!/usr/bin/perl
 use Digest::MD5 qw(md5 md5_hex md5_base64);
+use PDF::API2;
 
 #DATABASE CONSTANTS
 
@@ -21,6 +22,30 @@ my $NUMTICKS_COLUMN = 2;
 my $PLAYID_COLUMN = 0;
 my $PLAYNAME_COLUMN = 1;
 my $NUMTICKS_COLUM = 2;
+
+&generate_pdf_reservations();
+
+sub generate_pdf_reservations {
+
+  my $username = &getUsername();
+  my $pdf  = PDF::API2->new(-file => "test.pdf");
+  $pdf->mediabox(595,842);
+  my $page = $pdf->page;
+  my $fnt = $pdf->corefont('Arial',-encoding => 'latin1'); 
+  my $txt = $page->text;
+  $txt->textstart;
+  $txt->font($fnt, 20);
+
+  #@userReservations = @_;
+  #foreach $reservation (@userReservations)
+  #{
+    $txt->translate(100,800);
+    $txt->text("Hello World! left-aligned");
+  #}
+  $txt->textend;
+  $pdf->save;
+  $pdf->end( );
+}
 
 sub send_password_reset_email {
 	my $username = shift;
