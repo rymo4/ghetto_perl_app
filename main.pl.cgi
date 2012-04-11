@@ -21,13 +21,18 @@ if (!&isLoggedIn)
 		my $validEmail = &checkValidEmail( $params{'email'});
 		if ($params{'confirm_password'} eq $params{'new_password'} && $available && $validEmail)
 		{
-			# TODO: validations to make sure username does not exist, etc.
-			&add_user($params{'new_username'}, md5_hex($params{'new_password'}), $params{'email'});
-			&signin($params{'new_username'});
-			&log_data("New user $params{'new_username'} registered");
-			&log_data("$params{'new_username'} logged in");
-
-			&render('home', { username => &getUsername });
+			if (length $params{'new_password'} < 6)
+			{
+				&render('landing', { errors => 'The password has to be 6 or more charactes!'});
+			}
+			else 
+			{
+					&add_user($params{'new_username'}, md5_hex($params{'new_password'}), $params{'email'});
+					&signin($params{'new_username'});
+					&log_data("New user $params{'new_username'} registered");
+					&log_data("$params{'new_username'} logged in");
+					&render('home', { username => &getUsername });
+			}
 		}
 		elsif (!$validEmail)
 		{
@@ -90,8 +95,7 @@ else # you ARE logged in
 		else
 		{
 			&log_data("$username failed reservation, $params{'numseats'} seats for $play insufficient availability");
-			&render('home', { errors => 'Not enough seats available for your play and time selection' });
-
+			&render('home', { errors => 'Not enough seats available for your play and time selection.' });
 		}
 	}
 	elsif(exists $params{'stats'}) # STATS PAGE
@@ -123,13 +127,12 @@ else # you ARE logged in
 			my $password = $params{'new_password'};
 			&resetPassword($username, $password);
 			&log_data("$username manually changed password");
-			&render('profile', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed'});
+			&render('profile', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed!'});
 		}
 		else
 		{
-			&render('profile', { email => $email , username => $username, reservations => $reservations,  errors => 'Passwords entered dont match'});
+			&render('profile', { email => $email , username => $username, reservations => $reservations,  errors => 'Passwords entered dont match :('});
 		}
-		
 	}
 	else
 	{

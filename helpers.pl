@@ -51,7 +51,7 @@ sub output_reservations_html {
 	my $formatted;
 	my $index = 0;
 	foreach my $play_id (@reservation_ids) {
-		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets</td>';
+		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . &pluralize('ticket', $num_tickets[$index] ) .'</td>';
 		$formatted .= <<"END_OF_PRINTING";
 					<td>
 						<form action="main.pl.cgi" method=POST>
@@ -97,7 +97,7 @@ sub output_reservations_raw {
 		my @resevations;
 		my $index = 0;
 		foreach my $play_id (@reservation_ids) {
-			my $res = &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets';
+			my $res = &getPlayName($play_id) . ' - ' . &pluralize('ticket', $num_tickets[$index] );
 			push(@reservations, $res);
 			$index++;
 		}
@@ -109,7 +109,7 @@ sub output_availability_html {
   my $formatted;
   foreach my $id (keys %plays) {
 		
-    $formatted .= '<tr><td>' . &getPlayName($id) . ' - ' . $plays{$id} . ' tickets left</td></tr>';  
+    $formatted .= '<tr><td>' . &getPlayName($id) . ' - ' . &pluralize('ticket', $plays{$id} ) . ' left</td></tr>';  
   }
   return $formatted;
 }
@@ -471,7 +471,7 @@ sub signin { #
 	close FILE;
 }
 
-sub signout {
+sub signout { # remove the line with the username in it from sessions.txt
 	my $user_ip = $ENV{REMOTE_ADDR};
 	my $filename = 'sessions.txt';
 	my $replace = ' ';
@@ -487,9 +487,6 @@ sub signout {
       }
    }
 }
-	
-	# remove the line with the username in it from sessions.txt
-
 
 #subroutine that checks whether the supplied password and username match an entry in the database. It relies on the MD5 algorithm to do so.
 sub password_check
@@ -516,6 +513,15 @@ sub password_check
   return $valid;
 }
 
-
+sub pluralize {
+	$word = shift;
+	$num = shift;
+	if ($num == 1) {
+		return "1 $word";
+	}
+	else {
+		return "$num $word" . "s";
+	}
+}
 1;
 
