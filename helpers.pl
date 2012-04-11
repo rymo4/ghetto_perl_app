@@ -203,8 +203,8 @@ sub cancelReservation
     local @ARGV = ($filename);
     local $^I = '.bac';
 		$beenFound = 0;
-    while( <> && !$beenFound ){
-      if( s/$username=$play_id=$numTickets/$replace/ig ) {
+    while( <>){
+      if( s/$username=$play_id=$numTickets/$replace/ig && !$beenFound ) {
         print;
 				$beenFound = 1;
       }
