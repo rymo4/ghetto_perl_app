@@ -94,11 +94,11 @@ else # you ARE logged in
 
 		}
 	}
-	elsif(exists $params{'about'})
+	elsif(exists $params{'stats'}) # STATS PAGE
 	{
 		my $numUsers = &getNumUsers();
 		my $numReservations = &getNumReservations();
-		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, tickets_available => &output_availability });
+		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, tickets_available => &output_availability_html });
 	}
 	elsif(exists $params{'delete_reservation_id'} && exists $params{'delete_reservation_tickets'})
 	{
