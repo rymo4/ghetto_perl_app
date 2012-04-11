@@ -5,7 +5,9 @@ sub layout { # takes 1 string that contains what to insert in $yield
 	my $success = $_[2];
 	my $logout_button;
 	if (&isLoggedIn){
-		$logout_button = '<li><a href="javascript:document.logout.submit()">Logout</a></li>';	
+		$logout_button = '<li><a href="javascript:document.logout.submit()">Logout</a></li>';
+		$profile_button = '<li><a href="javascript:document.profile.submit()">My Profile</a></li>';
+		$stats_button =  '<li><a href="javascript:document.stats.submit()">Stats</a></li>';
 	}
 		
 	if ($errors){
@@ -22,11 +24,13 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
 		</head>
 		<body>
-			<div class="navbar">
+			<div class="navbar ">
 			  <div class="navbar-inner">
 			    <div class="container">
-			      <ul class="nav">
+			      <ul class="nav nav-pills">
 						 	$logout_button
+							$profile_button
+							$stats_button
 						  <li><a href="#">Link</a></li>
 						</ul>
 			    </div>
@@ -39,6 +43,10 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			</div>
 			<div class="hidden">
 					<form name="logout" action="main.pl.cgi" method=POST class="unstyled"><input type="hidden" name="logout"></form>
+					<form name="profile" action="main.pl.cgi" method=POST><input type="hidden" name="profile"></form>
+					<form name="stats" action="main.pl.cgi" method=POST><input type="hidden" name="Stats"></form>
+					
+					
 			</div>
 		</body>
 	</html>

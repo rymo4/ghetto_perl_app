@@ -45,29 +45,33 @@ sub generate_random_string {
 }
 
 sub output_reservations_html {
-	my %reservations = &getUserHistory;
+	my ($reservation_ids_ref, $num_tickets_ref) = &getUserHistory;
+	my @reservation_ids = @$reservation_ids_ref;
+	my @num_tickets = @$num_tickets_ref;
 	my $formatted;
-	foreach my $res (keys %reservations) {
-		$formatted .= '<tr><td>' . &getPlayName($res) . ' - ' . $reservations{$res} . 'tickets</td></tr>';
+	my $index = 0;
+	foreach my $play_id (@reservation_ids) {
+		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . $num_tickets[$index] . ' tickets</td>';
 		$formatted .= <<"END_OF_PRINTING";
 				<tr>
 					<td>
 						<form action="main.pl.cgi" method=POST>
-						<input type="hidden" name="delete_reservation_id" value="$res">
-						<input type="hidden" name="delete_reservation_tickets" value="$reservations{$res}">
-						<input type="submit" value="Stats" class="btn btn-danger">
+							<input type="hidden" name="delete_reservation_id" value="$play_id">
+							<input type="hidden" name="delete_reservation_tickets" value="$num_tickets[$index]">
+							<input type="submit" value="Delete" class="btn btn-danger">
 						</form>
 					</td>
 				</tr>
 END_OF_PRINTING
-	
+	$index++;
 	}
 	return $formatted;
 }
 
 sub getUserHistory {
   my $username = &getUsername();
-  my %reservations;
+  my @reservation_ids;
+ 	my @num_tickets;
   open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
 	my @lines = <FILE>;
 	close FILE;
@@ -79,13 +83,12 @@ sub getUserHistory {
     {
       chomp ($reservationDatabase[$PLAYID_COLUMN]);
       chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
-
       $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
-      $reservations{$reservationDatabase[$RESID_COLUMN]} = $numTickets;
-
+			push(@reservation_ids, $reservationDatabase[$RESID_COLUMN]);
+			push(@num_tickets, $numTickets);
     }
   }
-	return %reservations;
+	return (\@reservation_ids, \@num_tickets);
 }
 
 sub output_availability_html {
@@ -183,15 +186,15 @@ sub cancelReservation
   my $filename = 'availability.txt';
   my $replace = "$play_id=$playName=$newNumSeats";
 
-    local @ARGV = ($filename);
-    local $^I = '.bac';
-    while( <> ){
-      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
-         print;
-      }
-      else {
-         print;
-      }
+  local @ARGV = ($filename);
+  local $^I = '.bac';
+  while( <> ){
+  	if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
+       print;
+    }
+    else {
+    	print;
+    }
    }
 
   my $filename = 'reservations.txt';
@@ -199,9 +202,11 @@ sub cancelReservation
 
     local @ARGV = ($filename);
     local $^I = '.bac';
-    while( <> ){
+		$beenFound = 0;
+    while( <> && !$beenFound ){
       if( s/$username=$play_id=$numTickets/$replace/ig ) {
-         print;
+        print;
+				$beenFound = 1;
       }
       else {
          print;
