@@ -113,6 +113,14 @@ else # you ARE logged in
 		my $email = &getEmail();
 		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
 	}
+	elsif(exists $params{'generate_pdf'})
+	{
+		my @reservations = &getReservations();
+		&generate_pdf_reservations(@reservations);
+		my $username = &getUsername();
+		my $email = &getEmail();
+		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html, success => 'PDF generated succesfully'});
+	}
 	elsif(exists $params{'forgot_username'})
 	{
 		my $username = &getUsername();

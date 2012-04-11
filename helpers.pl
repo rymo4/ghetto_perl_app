@@ -23,28 +23,60 @@ my $PLAYID_COLUMN = 0;
 my $PLAYNAME_COLUMN = 1;
 my $NUMTICKS_COLUM = 2;
 
-&generate_pdf_reservations();
-
 sub generate_pdf_reservations {
 
   my $username = &getUsername();
-  my $pdf  = PDF::API2->new(-file => "test.pdf");
+  my $pdf  = PDF::API2->new(-file => "$username".".pdf");
   $pdf->mediabox(595,842);
   my $page = $pdf->page;
   my $fnt = $pdf->corefont('Arial',-encoding => 'latin1'); 
   my $txt = $page->text;
+  my $dy = 750;
   $txt->textstart;
   $txt->font($fnt, 20);
 
-  #@userReservations = @_;
-  #foreach $reservation (@userReservations)
-  #{
-    $txt->translate(100,800);
-    $txt->text("Hello World! left-aligned");
-  #}
+  $txt->translate(300,$dy);
+  $txt->text_center("BRO-adway Reservations for: $username");
+
+  
+  @userReservations = @_;
+  $reservationNum = 1;
+  $dy -= 80;
+  foreach $reservation (@userReservations)
+  {
+    $txt->translate(100,$dy);
+    $txt->text("$reservationNum -- $reservation");
+    $reservationNum +=1;
+    $dy -= 40;
+  }
   $txt->textend;
   $pdf->save;
   $pdf->end( );
+}
+
+sub getReservations {
+  open (FILE, "reservations.txt") || die "Problem opening reservations.txt $1";
+  my @lines = <FILE>;
+  close FILE;
+  my $username = &getUsername();
+  my @reservations;
+  my $index = 0;
+  foreach my $line (@lines)
+  {
+    my @reservationDatabase = split(/=/,$line);
+    chomp ($reservationDatabase[$USER_COLUMN]);
+    if($username eq $reservationDatabase[$USER_COLUMN])
+    {
+      chomp ($reservationDatabase[$PLAYID_COLUMN]);
+      chomp ($reservationDatabase[$NUMTICKS_COLUMN]);
+
+      my $numTickets = $reservationDatabase[$NUMTICKS_COLUMN];
+      my $playName = &getPlayName($reservationDatabase[$NUMTICKS_COLUMN]);
+      $reservations[$index] = "$numTickets Tickets for: $playName";
+      $index++;
+    }
+  }
+  return @reservations;
 }
 
 sub send_password_reset_email {
