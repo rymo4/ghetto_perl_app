@@ -81,20 +81,20 @@ else # you ARE logged in
 		&signout(&getUsername());
 		&render('landing');
 	}
-	elsif(exists $params{'play_id'} && exists $params{'numseats'}) # PLACED ORDER
+	elsif(exists $params{'play_name'} && exists $params{'play_time'} && exists $params{'numseats'}) # PLACED ORDER
 	{
 	
 		my $available = &checkAvailability($params{'play_id'}, $params{'numseats'});
-		my $play = &getPlayName($params{'play_id'});
+		$playName = "$params{'play_id'}"."+"."$params{'play_name'}";
 		if($available)
 		{
-			&makeReservation($params{'play_id'}, $params{'numseats'});
-			&log_data("$username new reservation, $params{'numseats'} seats for $play");
+			&makeReservation($playName, $params{'numseats'});
+			&log_data("$username new reservation, $params{'numseats'} seats for $playName");
 			&render('home', { success => 'Reservation succesfully made'});
 		}
 		else
 		{
-			&log_data("$username failed reservation, $params{'numseats'} seats for $play insufficient availability");
+			&log_data("$username failed reservation, $params{'numseats'} seats for $playName insufficient availability");
 			&render('home', { errors => 'Not enough seats available for your play and time selection.' });
 		}
 	}
@@ -104,17 +104,20 @@ else # you ARE logged in
 		my $numReservations = &getNumReservations();
 		&render('stats', { numUsers => $numUsers , numReservations => $numReservations, tickets_available => &output_availability_html });
 	}
-	elsif(exists $params{'delete_reservation_id'} && exists $params{'delete_reservation_tickets'})
+	elsif(exists $params{'delete_reservation_name'} && exists $params{'delete_reservation_tickets'})
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
-		&cancelReservation($params{'delete_reservation_id'}, $params{'delete_reservation_tickets'});
+		$playName = "$params{'play_id'}"."+"."$params{'play_name'}";
+		&cancelReservation($playName, $params{'delete_reservation_tickets'});
+		&log_data("$username canceled reservation, $params{'numseats'} seats for $playName");
 		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
 	}
 	elsif(exists $params{'profile'})
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
+		&log_data("$username viewd their profile");
 		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
 	}
 	elsif(exists $params{'generate_pdf'})

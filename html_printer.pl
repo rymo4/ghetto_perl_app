@@ -6,6 +6,7 @@ sub render {
 	my $params_ref = shift;
 	my %params = %{$params_ref};
 	$params{'play_options'} =  &getPlayOptions;
+	$params{'play_times'} = &getPlayTimes;
 	open( FILE, "views/$filename.html" ) || die "problem opening $filename.html $!";
 	my @html_raw = <FILE>; 
 	close FILE;

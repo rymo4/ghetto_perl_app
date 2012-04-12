@@ -194,22 +194,53 @@ sub getPlayOptions {
 	$html_options;
 	foreach my $line (@lines) {
 		my @parts = split(/=/, $line);
-		my $play_id = @parts[0];
-		my $play = @parts[1];
-		my $numseats = @parts[2];
+		my $play_id = $parts[0];
+
+		my @playInfo = split(/+/, $parts[1]);
+
+    my $play = $playInfo[0];  
+
+		my $numseats = $parts[2];
 		
 		if (int($numseats) > 0)
 		{
-			$html_options .= '<option value="' . $play_id . '">' . $play . '</option>';			
+			$html_options .= '<option value="' . $play . '">' . $play . '</option>';			
 		}
 		else
 		{
-				$html_options .= '<option value="' . $play_id . '">' . $play .' (SOLD OUT)' . '</option>';
+				$html_options .= '<option value="' . $play . '">' . $play .' (SOLD OUT)' . '</option>';
 		}
 	}
 	return $html_options;
 }
 
+sub getPlatTimes {
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  @lines = <FILE>;
+  close FILE;
+  $html_options;
+  foreach my $line (@lines) {
+    my @parts = split(/=/, $line);
+    my $play_id = $parts[0];
+
+    my @playInfo = split(/+/, $parts[1]);
+
+    my $play = $playInfo[1];  
+
+    my $numseats = $parts[2];
+    
+    if (int($numseats) > 0)
+    {
+      $html_options .= '<option value="' . $playTime . '">' . $playTime . '</option>';      
+    }
+    else
+    {
+        $html_options .= '<option value="' . $playTime . '">' . $playTime .' (SOLD OUT)' . '</option>';
+    }
+  }
+  return $html_options;
+
+}
 
 
 sub add_user { # takes username and hashed password
@@ -237,13 +268,12 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 
 sub cancelReservation
 {
-  my $play_id = $_[0];
+  my $playName = $_[0];
   my $numTickets = $_[1];
   my $username = &getUsername();
-
+  my $play_id = &getPlayID($playName);
   my $numSeatsAvailable = &getNumSeats($play_id);
   my $newNumSeats = $numSeatsAvailable + $numTickets;
-  my $playName = &getPlayName($play_id);
 
   #updates database adding th enew number of seats available
   my $filename = 'availability.txt';
@@ -350,8 +380,14 @@ sub getEmail{
   foreach my $line (@lines)
   {
     @userDatabase = split(/=/,$line);
-    chomp ($userDatabase[$EMAIL_COLUMN]);
-    $email = $userDatabase[$EMAIL_COLUMN];
+    
+    chomp ($userDatabase[$USER_COLUMN]);
+    if($userDatabase[$USER_COLUMN] eq $username)
+    {
+      chomp ($userDatabase[$EMAIL_COLUMN]);
+      $email = $userDatabase[$EMAIL_COLUMN];
+      return $email;
+    } 
   }
   return $email;
 }
@@ -488,14 +524,34 @@ sub getNumSeats
   return $numSeats;
 }
 
+sub getPlayID {
+  my $play_id;
+  my $playName = $_[0];
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  my @lines = <FILE>;
+  close FILE;
+  foreach my $line (@lines)
+  {
+    my @availabilityDatabase = split(/=/,$line);
+    chomp($availabilityDatabase[$PLAYNAME_COLUMN]);
+    if($playName eq $availabilityDatabase[$PLAYNAME_COLUMN])
+    {
+      chomp ($availabilityDatabase[$PLAYID_COLUMN]);
+      $play_id = $availabilityDatabase[$PLAYID_COLUMN];
+      return $play_id;
+    }
+  }
+  return $play_id;
+}
+
 sub makeReservation
 {
   my $username = &getUsername();
-  my $play_id = $_[0];
+  my $playName = $_[0];
   my $numSeatsOrder = $_[1];
+  my $play_id = &getPlayID($playName);
   my $numSeatsAvailable = &getNumSeats($play_id);
   my $newNumSeats = $numSeatsAvailable - $numSeatsOrder;
-  my $playName = &getPlayName($play_id);
 
   #replaces info with new number of available seats
   my $filename = 'availability.txt';
