@@ -288,6 +288,39 @@ sub log_data {
   close FILE;
 }
 
+sub getStatsFromLogs {
+	open (FILE, "logfile.txt") || die "Problem opening logfile.txt $1";
+	my @lines = <FILE>;
+  close FILE;
+	my %data;
+	foreach my $line (@lines){
+		if ($line=~ /logged in/)
+		{
+			$data{'Login'} = $data{'Login'} + 1;
+		}
+		elsif ($line=~ /invalid login attempt/) #profile, resets, logout, pdf gen
+		{
+			$data{'Invalid Login'} = $data{'Invalid Login'} + 1;
+		}
+		elsif ($line=~ /requested automatic password change/)
+		{
+			$data{'Random Password Change'} = $data{'Password Change'} + 1;
+		}
+		elsif ($line=~ /logged out/)
+		{
+			$data{'Logout'} = $data{'Logout'} + 1;
+		}
+		elsif ($line=~ /failed reservation/)
+		{
+			$data{'Failed Reservation'} = $data{'Failed Reservation'} + 1;
+		}
+		elsif ($line=~ /manually changed password/)
+		{
+			$data{'Custom Password Change'} = $data{'Custom Password Change'} + 1;
+		}
+	}
+}
+
 sub isNameAvailable{
 	my $available = 1;
 	my $username = $_[0];
