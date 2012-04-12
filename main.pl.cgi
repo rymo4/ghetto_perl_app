@@ -123,6 +123,7 @@ else # you ARE logged in
 		&generate_pdf_reservations(@reservations);
 		my $username = &getUsername();
 		my $email = &getEmail();
+		&log_data("$username generated a PDF of his reservations");
 		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html, success => 'PDF generated succesfully'});
 	}
 	elsif(exists $params{'forgot_username'})
