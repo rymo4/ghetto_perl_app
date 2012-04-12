@@ -85,7 +85,7 @@ else # you ARE logged in
 	{
 	
 		my $available = &checkAvailability($params{'play_id'}, $params{'numseats'});
-		$playName = "$params{'play_id'}"."+"."$params{'play_name'}";
+		my $playName = "$params{'play_id'}"."+"."$params{'play_name'}";
 		if($available)
 		{
 			&makeReservation($playName, $params{'numseats'});
@@ -108,7 +108,7 @@ else # you ARE logged in
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
-		$playName = "$params{'play_id'}"."+"."$params{'play_name'}";
+		my $playName = "$params{'play_id'}"."+"."$params{'play_name'}";
 		&cancelReservation($playName, $params{'delete_reservation_tickets'});
 		&log_data("$username canceled reservation, $params{'numseats'} seats for $playName");
 		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });

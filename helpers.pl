@@ -191,12 +191,12 @@ sub getPlayOptions {
 	open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
 	@lines = <FILE>;
 	close FILE;
-	$html_options;
+	my $html_options;
 	foreach my $line (@lines) {
 		my @parts = split(/=/, $line);
 		my $play_id = $parts[0];
 
-		my @playInfo = split(/+/, $parts[1]);
+		my @playInfo = split(/\+/, $parts[1]);
 
     my $play = $playInfo[0];  
 
@@ -214,18 +214,18 @@ sub getPlayOptions {
 	return $html_options;
 }
 
-sub getPlatTimes {
+sub getPlayTimes {
   open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
   @lines = <FILE>;
   close FILE;
-  $html_options;
+  my $html_options;
   foreach my $line (@lines) {
     my @parts = split(/=/, $line);
     my $play_id = $parts[0];
 
-    my @playInfo = split(/+/, $parts[1]);
+    my @playInfo = split(/\+/, $parts[1]);
 
-    my $play = $playInfo[1];  
+    my $playTime = $playInfo[1];  
 
     my $numseats = $parts[2];
     
