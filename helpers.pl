@@ -298,7 +298,7 @@ sub getStatsFromLogs {
 		{
 			$data{'Login'} = $data{'Login'} + 1;
 		}
-		elsif ($line=~ /invalid login attempt/) #profile, resets, logout, pdf gen
+		elsif ($line=~ /invalid login attempt/) 
 		{
 			$data{'Invalid Login'} = $data{'Invalid Login'} + 1;
 		}
@@ -318,7 +318,23 @@ sub getStatsFromLogs {
 		{
 			$data{'Custom Password Change'} = $data{'Custom Password Change'} + 1;
 		}
+		elsif ($line=~ /generated a PDF of his reservations/)
+		{
+			$data{'PDF'} = $data{'PDF'} + 1;
+		}	
 	}
+	$data{'Reservation'} = &getNumReservations;
+	$data{'User'} = &getNumUsers;
+	return %data;
+}
+sub get_stats_html {
+	my %data = &getStatsFromLogs;
+	my $formatted;
+	foreach (keys %data)
+	{
+		$formatted.= '<li>' . &pluralize($_, $data{$_}) . '</li>';
+	}
+	return $formatted;
 }
 
 sub isNameAvailable{
