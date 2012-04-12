@@ -268,21 +268,24 @@ sub parse_form { # used to parse raw form date into a hash of name => input
 
 sub cancelReservation
 {
-  my $playName = $_[0];
+  my $play_id = $_[0];
   my $numTickets = $_[1];
   my $username = &getUsername();
-  my $play_id = &getPlayID($playName);
+  my $playName = &getPlayName($play_id);
   my $numSeatsAvailable = &getNumSeats($play_id);
   my $newNumSeats = $numSeatsAvailable + $numTickets;
 
   #updates database adding th enew number of seats available
   my $filename = 'availability.txt';
+
+  my @tempData = split(/\+/,$playName);  
+  my $original = "$play_id=$tempData[0]\+$tempData[1]=$numSeatsAvailable";
   my $replace = "$play_id=$playName=$newNumSeats";
 
   local @ARGV = ($filename);
   local $^I = '.bac';
   while( <> ){
-  	if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
+  	if( s/$play_id=$tempData[0]\+$tempData[1]=$numSeatsAvailable/$replace/ig ) {
        print;
     }
     else {
@@ -605,14 +608,16 @@ sub makeReservation
   #replaces info with new number of available seats
   my $filename = 'availability.txt';
 
-
-  print "$replace";
+  my @tempData = split(/\+/,$playName);
+  
   my $replace = "$play_id=$playName=$newNumSeats";
+  my $original = "$play_id=$tempData[0]\+$tempData[1]=$numSeatsAvailable";
+  chomp($original);
 
     local @ARGV = ($filename);
     local $^I = '.bac';
     while( <> ){
-      if( s/$play_id=$playName=$numSeatsAvailable/$replace/ig ) {
+      if( s/$play_id=$tempData[0]\+$tempData[1]=$numSeatsAvailable/$replace/ig ) {
          print;
       }
       else {
