@@ -192,24 +192,40 @@ sub getPlayOptions {
 	@lines = <FILE>;
 	close FILE;
 	my $html_options;
+  my @used;
+  my $isUsed;
+  my $index = 0;
 	foreach my $line (@lines) {
 		my @parts = split(/=/, $line);
 		my $play_id = $parts[0];
 
 		my @playInfo = split(/\+/, $parts[1]);
-
     my $play = $playInfo[0];  
-
 		my $numseats = $parts[2];
 		
-		if (int($numseats) > 0)
-		{
-			$html_options .= '<option value="' . $play . '">' . $play . '</option>';			
-		}
-		else
-		{
-				$html_options .= '<option value="' . $play . '">' . $play .' (SOLD OUT)' . '</option>';
-		}
+    $isUsed = 0;
+    foreach my $usedRes (@used)
+    {
+      if($play eq $usedRes)
+      {
+        $isUsed = 1;
+      }
+        
+    }
+
+		if(!$isUsed)
+    {
+      $used[$index] = $play;
+      $index++;
+      if (int($numseats) > 0)
+      {
+       $html_options .= '<option value="' . $play . '">' . $play . '</option>';     
+      }
+      else
+      {
+        $html_options .= '<option value="' . $play . '">' . $play .' (SOLD OUT)' . '</option>';
+      } 
+    }  
 	}
 	return $html_options;
 }
@@ -219,24 +235,40 @@ sub getPlayTimes {
   @lines = <FILE>;
   close FILE;
   my $html_options;
+  my @used;
+  my $isUsed;
+  my $index = 0;
   foreach my $line (@lines) {
     my @parts = split(/=/, $line);
     my $play_id = $parts[0];
 
     my @playInfo = split(/\+/, $parts[1]);
-
     my $playTime = $playInfo[1];  
-
     my $numseats = $parts[2];
     
-    if (int($numseats) > 0)
+    $isUsed = 0;
+    foreach my $usedRes (@used)
     {
-      $html_options .= '<option value="' . $playTime . '">' . $playTime . '</option>';      
+      if($playTime eq $usedRes)
+      {
+        $isUsed = 1;
+      }
+        
     }
-    else
+    if(!$isUsed)
     {
+      $used[$index] = $playTime;
+      $index++;
+      if (int($numseats) > 0)
+      { 
+        $html_options .= '<option value="' . $playTime . '">' . $playTime . '</option>';      
+      }
+      else
+      {
         $html_options .= '<option value="' . $playTime . '">' . $playTime .' (SOLD OUT)' . '</option>';
+      }
     }
+    
   }
   return $html_options;
 
