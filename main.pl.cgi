@@ -111,16 +111,18 @@ else # you ARE logged in
 		my $username = &getUsername();
 		my $email = &getEmail();
 		my $playName = &getPlayName($params{'delete_reservation_id'});
+		my $ip_address = $ENV{REMOTE_ADDR};
 		&cancelReservation($params{'delete_reservation_id'}, $params{'delete_reservation_tickets'});
 		&log_data("$username canceled reservation, $params{'numseats'} seats for $playName");
-		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
+		&render('profile', { email => $email , username => $username, ip_address => $ip_address, reservations => &output_reservations_html, success => 'Reservation succesfully canceled' });
 	}
 	elsif(exists $params{'profile'})
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
+		my $ip_address = $ENV{REMOTE_ADDR};
 		&log_data("$username viewd their profile");
-		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html });
+		&render('profile', { email => $email , username => $username, ip_address => $ip_address, reservations => &output_reservations_html });
 	}
 	elsif(exists $params{'generate_pdf'})
 	{
@@ -128,25 +130,31 @@ else # you ARE logged in
 		&generate_pdf_reservations(@reservations);
 		my $username = &getUsername();
 		my $email = &getEmail();
+		my $ip_address = $ENV{REMOTE_ADDR};
 		&log_data("$username generated a PDF of his reservations");
-		&render('profile', { email => $email , username => $username, reservations => &output_reservations_html, success => 'PDF generated succesfully'});
+		&render('profile', { email => $email , username => $username, ip_address => $ip_address, reservations => &output_reservations_html, success => 'PDF generated succesfully'});
 	}
 	elsif(exists $params{'forgot_username'})
 	{
 		my $username = &getUsername();
 		my $email = &getEmail();
+		my $ip_address = $ENV{REMOTE_ADDR};
 		my $reservations = &output_reservations_html();
 		if ($params{'confirm_password'} eq $params{'new_password'})
 		{
 			my $password = $params{'new_password'};
 			&resetPassword($username, $password);
 			&log_data("$username manually changed password");
-			&render('profile', { email => $email , username => $username, reservations => $reservations,  success => 'Password succesfully changed!'});
+			&render('profile', { email => $email , username => $username, ip_address => $ip_address, reservations => $reservations,  success => 'Password succesfully changed!'});
 		}
 		else
 		{
-			&render('profile', { email => $email , username => $username, reservations => $reservations,  errors => 'Passwords entered dont match :('});
+			&render('profile', { email => $email , username => $username, ip_address => $ip_address, reservations => $reservations,  errors => 'Passwords entered dont match :('});
 		}
+	}
+	elsif(exists $params{'home'})
+	{
+		&render('home', { username => &getUsername});
 	}
 	else
 	{

@@ -108,13 +108,14 @@ sub output_reservations_html {
 	my $formatted;
 	my $index = 0;
 	foreach my $play_id (@reservation_ids) {
-		$formatted .= '<tr><td>' . &getPlayName($play_id) . ' - ' . &pluralize('ticket', $num_tickets[$index] ) .'</td>';
+    my @playInfo = split(/\+/,&getPlayName($play_id));
+		$formatted .= '<tr><td>' . $playInfo[0] . ' at ' . $playInfo[1] . ' - ' . &pluralize('ticket', $num_tickets[$index] ) .'</td>';
 		$formatted .= <<"END_OF_PRINTING";
 					<td>
 						<form action="main.pl.cgi" method=POST>
 							<input type="hidden" name="delete_reservation_id" value="$play_id">
 							<input type="hidden" name="delete_reservation_tickets" value="$num_tickets[$index]">
-							<input type="submit" value="Delete" class="btn btn-danger">
+							<input type="submit" value="Cancel" class="btn btn-danger">
 						</form>
 					</td>
 				</tr>
@@ -154,7 +155,9 @@ sub output_reservations_raw {
 		my @resevations;
 		my $index = 0;
 		foreach my $play_id (@reservation_ids) {
-			my $res = &getPlayName($play_id) . ' - ' . &pluralize('ticket', $num_tickets[$index] );
+      my @playInfo = split(/\+/,&getPlayName($play_id));
+
+			my $res = $playInfo[0] . ' at ' . $playInfo[1] . ' - ' . &pluralize('ticket', $num_tickets[$index] );
 			push(@reservations, $res);
 			$index++;
 		}
@@ -165,8 +168,8 @@ sub output_availability_html {
 	my %plays = %$hash_ref;
   my $formatted;
   foreach my $id (keys %plays) {
-		
-    $formatted .= '<tr><td>' . &getPlayName($id) . ' - ' . &pluralize('ticket', $plays{$id} ) . ' left</td></tr>';  
+    my @playInfo = split(/\+/,&getPlayName($id));    
+   $formatted .= '<tr><td><li>' . $playInfo[0] . ' at ' . $playInfo[1] . ' - ' . &pluralize('ticket', $plays{$id} ) . ' left</li></td></tr>';  
   }
   return $formatted;
 }
@@ -397,7 +400,7 @@ sub get_stats_html {
 	my $formatted;
 	foreach (keys %data)
 	{
-		$formatted.= '<li>' . &pluralize($_, $data{$_}) . '</li>';
+		$formatted.= '<tr><td><li>' . &pluralize($_, $data{$_}) . '</li></td></tr>';
 	}
 	return $formatted;
 }

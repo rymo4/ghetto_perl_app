@@ -4,8 +4,10 @@ sub layout { # takes 1 string that contains what to insert in $yield
 	my $errors = $_[1];
 	my $success = $_[2];
 	my $logout_button;
+	my $home_button;
 	if (&isLoggedIn){
 		$logout_button = '<li><a href="javascript:document.logout.submit()">Logout</a></li>';
+		$home_button = '<li><a href="javascript:document.home.submit()">Home</a></li>';
 		$profile_button = '<li><a href="javascript:document.profile.submit()">My Profile</a></li>';
 		$stats_button =  '<li><a href="javascript:document.stats.submit()">Stats</a></li>';
 	}
@@ -29,6 +31,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			    <div class="container">
 			      <ul class="nav nav-pills">
 						 	$logout_button
+						 	$home_button
 							$profile_button
 							$stats_button
 						  <li><a href="#">Link</a></li>
@@ -42,6 +45,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 				$yield
 			</div>
 			<div class="hidden">
+					<form name="home" action="main.pl.cgi" method=POST><input type="hidden" name="home"></form>
 					<form name="logout" action="main.pl.cgi" method=POST class="unstyled"><input type="hidden" name="logout"></form>
 					<form name="profile" action="main.pl.cgi" method=POST><input type="hidden" name="profile"></form>
 					<form name="stats" action="main.pl.cgi" method=POST><input type="hidden" name="stats"></form>
@@ -49,6 +53,18 @@ sub layout { # takes 1 string that contains what to insert in $yield
 					
 			</div>
 		</body>
+		<br>
+		<br>
+		<hr>
+		<center><footer>
+      		<p><b>Copyright © Moody & Cruz</b></p>
+      		<address>
+        		Contact:
+        		<br>
+        		<li><a href="battistelcruzenrique@hotmail.com">battistelcruzenrique@hotmail.com</a></li>
+        		<li><a href="rydthemoodster@gmail.com">rydthemoodster@gmail.com</a></li>
+      		</address>
+    	</footer></center>
 	</html>
 END_OF_PRINTING
 }

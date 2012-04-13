@@ -1,29 +1,37 @@
+<h1><center>My Profile</center></h1>
+<br>
+<br>
+<h2>Profile information:</h2>
 <table class="table table-condensed">
   <thead>
     <tr>
       <th>Username</th>
       <th>User Email</th>
+      <th>User IP</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>$username</td>
       <td>$email</td>
+      <td>$ip_address</td>
     </tr>
   </tbody>
 </table>
 
-<h1> Would you like to reset your password? </h1>
+<h2> Password change </h2>
 <form action="main.pl.cgi" method=POST>
 <input type="password" name="new_password" placeholder="Your New Password">
 <input type="password" name="confirm_password" placeholder="And Again...">
 <input type="hidden" name="forgot_username">
-<input type="submit" value="Reset Password" class="btn btn-primary btn-large"></form>
+<input type="submit" value="Change Password" class="btn btn-primary"></form>
+<br>
 
+<h2> Reservations </h2>
 <table class="table table-condensed">
   <thead>
     <tr>
-      <th>Reservations</th>
+      <th>My Reservations:</th>
 			<th></th>
     </tr>
   </thead>
@@ -32,7 +40,7 @@
   </tbody>
 </table>
 
-<h1> Would you like a pdf of all your reservations?</h1>
+<h2> Would you like a pdf of all your reservations?</h1>
 <form action="main.pl.cgi" method=POST>
 <input type="hidden" name="generate_pdf">
-<input type="submit" value="Generate PDF" class="btn btn-primary btn-large"></form>
+<input type="submit" value="Generate PDF" class="btn btn-primary"></form>
