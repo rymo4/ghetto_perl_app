@@ -30,11 +30,11 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			  <div class="navbar-inner">
 			    <div class="container">
 			      <ul class="nav nav-pills">
+							<a href="" class="brand">Bro-dway</a>
 						 	$logout_button
 						 	$home_button
 							$profile_button
 							$stats_button
-						  <li><a href="#">Link</a></li>
 						</ul>
 			    </div>
 			  </div>
@@ -57,12 +57,14 @@ sub layout { # takes 1 string that contains what to insert in $yield
 		<br>
 		<hr>
 		<center><footer>
-      		<p><b>Copyright © Moody & Cruz</b></p>
+      		<p><b>Copyright Moody & Cruz</b></p>
       		<address>
         		Contact:
         		<br>
-        		<li><a href="battistelcruzenrique@hotmail.com">battistelcruzenrique@hotmail.com</a></li>
-        		<li><a href="rydthemoodster@gmail.com">rydthemoodster@gmail.com</a></li>
+						<ul class="unstyled"
+        			<li><a href="battistelcruzenrique\@hotmail.com">battistelcruzenrique\@hotmail.com</a></li>
+        			<li><a href="rydthemoodster\@gmail.com">rydthemoodster\@gmail.com</a></li>
+						</ul>
       		</address>
     	</footer></center>
 	</html>

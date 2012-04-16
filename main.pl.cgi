@@ -52,7 +52,7 @@ if (!&isLoggedIn)
 		{
 			&signin( $params{'username'});
 			&log_data("$params{'username'} logged in");
-			&render('home', { username => &getUsername });
+			&render('home', { username => &getUsername, success=>"Welcome to BRO-dway!" });
 		}
 		else
 		{
