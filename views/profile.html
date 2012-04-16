@@ -40,7 +40,23 @@
   </tbody>
 </table>
 
-<h2> Would you like a pdf of all your reservations?</h1>
+<h2> Would you like a pdf of your reservations?</h1>
 <form action="main.pl.cgi" method=POST>
+
+  <table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Choose of which plays</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+    $PDF_options
+  </td>
+    </tr>
+  </tbody>
+</table>
+
 <input type="hidden" name="generate_pdf">
 <input type="submit" value="Generate PDF" class="btn btn-primary"></form>

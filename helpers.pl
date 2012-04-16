@@ -44,8 +44,9 @@ sub generate_pdf_reservations {
   $dy -= 80;
   foreach $reservation (@userReservations)
   {
+    @reservationInfo = split(/\+/,$reservation);
     $txt->translate(100,$dy);
-    $txt->text("$reservationNum -- $reservation");
+    $txt->text("$reservationNum -- $reservationInfo[0] at $reservationInfo[1]");
     $reservationNum +=1;
     $dy -= 40;
   }
@@ -146,6 +147,48 @@ sub getUserHistory {
     }
   }
 	return (\@reservation_ids, \@num_tickets);
+}
+
+sub getPDFoptions {
+
+  open (FILE, "availability.txt") || die "Problem opening availability.txt $1";
+  @lines = <FILE>;
+  close FILE;
+  my $html_options;
+  my @used;
+  my $isUsed;
+  my $index = 0;
+  $PDF_0ptions = '<select name="PDF_options"><option value="all">All</option>';
+  foreach my $line (@lines) 
+  {
+    my @parts = split(/=/, $line);
+    my $play_id = $parts[0];
+
+    my @playInfo = split(/\+/, $parts[1]);
+    my $play = $playInfo[0];  
+    my $numseats = $parts[2];
+    
+    $isUsed = 0;
+    foreach my $usedRes (@used)
+    {
+      if($play eq $usedRes)
+      {
+        $isUsed = 1;
+      }
+        
+    }
+
+    if(!$isUsed)
+    {
+      $used[$index] = $play;
+      $index++;
+       $PDF_0ptions .= '<option value="' . $play . '">' . $play . '</option>';     
+    } 
+    
+  }
+  $PDF_0ptions .= '</select>';
+  return $PDF_0ptions;
+
 }
 
 sub output_reservations_raw {
