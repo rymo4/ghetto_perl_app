@@ -16,9 +16,10 @@ read STDIN, my $POST_data, $ENV{'CONTENT_LENGTH'}; # anything that come from a P
 
 print "Content-type: text/html\n\n";
 
-if ($POST_data =~ /[\d\w(-)!@#$%^&*]/) # wont match <> or quotes, which can be harmful
+if ($POST_data =~ m/([^<>]*)/) # wont match <> which can be harmful
 {
 	$POST_data = $1;
+	print $POST_data;
 }
 
 my %params = &parse_form($POST_data);
