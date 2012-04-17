@@ -1,25 +1,32 @@
 <img align="center"  valign="middle" src="images/banner.jpg" width="1000" height="150">
-<br>
+<h2 align="center">Your Neighborhood Broadway ticket scalper.</h2>
 <br>
 
-<h1>Got an account? Signin!</h1>
-<form action="main.pl.cgi" method=POST>
-<input type="text" name="username" placeholder="Your Userame">
-<input type="password" name="password" placeholder="Your Password">
-<br>
-<input type="submit" value="Enter" class="btn btn-primary btn-large"></form>
+<div class="row">
+	<div class="span4">
+		<h2>Got an account? Signin!</h2>
+		<form action="main.pl.cgi" method=POST>
+		<input type="text" name="username" placeholder="Your Userame">
+		<input type="password" name="password" placeholder="Your Password">
+		<br>
+		<input type="submit" value="Enter" class="btn btn-primary btn-large"></form>
+	</div>
 
-<h1>Don't got no account? Signup!</h1>
-<form action="main.pl.cgi" method=POST>
-<input type="text" name="new_username" placeholder="Your Userame">
-<input type="text" name="email" placeholder="Your E-mail address">
-<input type="password" name="new_password" placeholder="Your Password">
-<input type="password" name="confirm_password" placeholder="And Again...">
-<br>
-<input type="submit" value="Signup" class="btn btn-primary btn-large"></form>
-
-<h1>Forgot your Password?</h1>
-<form action="main.pl.cgi" method=POST>
-<input type="text" name="forgot_username" placeholder="Your Username">
-<br>
-<input type="submit" value="Send me my temp one!" class="btn btn-primary btn-large"></form>
+	<div class="span4">
+		<h2>No account? Signup!</h2>
+		<form action="main.pl.cgi" method=POST>
+		<input type="text" name="new_username" placeholder="Your Userame">
+		<input type="text" name="email" placeholder="Your E-mail address">
+		<input type="password" name="new_password" placeholder="Your Password">
+		<input type="password" name="confirm_password" placeholder="And Again...">
+		<br>
+		<input type="submit" value="Signup" class="btn btn-primary btn-large"></form>
+	</div>
+	<div class="span4">
+		<h2>Forgot your Password?</h2>
+		<form action="main.pl.cgi" method=POST>
+		<input type="text" name="forgot_username" placeholder="Your Username">
+		<br>
+		<input type="submit" value="Send me my temp one!" class="btn btn-primary btn-large"></form>
+	</div>
+</div>

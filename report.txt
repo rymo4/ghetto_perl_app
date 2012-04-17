@@ -1,0 +1,7 @@
+Ryder's Work:
+	Ryder set up the framework of the website, created methods such as render() to allow html files to be called and rendered, with variables passed into the views. Ryder also handled most of the frontend work. We are using Twitter Bootstrap for the styling of the website since it speeds up development considerably. 
+
+Enrique's Work:
+	Enrique wrote most of the interaction with the "database", which is a series of txt files. He also set up the pdf rendering so that users can view all of the tickets they have purchased. 
+	
+All of the remaining work was split between both of us as we saw fit while writing the code. 

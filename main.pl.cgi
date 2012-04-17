@@ -1,15 +1,26 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
+BEGIN { push @INC,'.'; };
 use strict;
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 require 'html_printer.pl';
 require 'helpers.pl';
+
+$ENV{PATH} = "/bin:/usr/bin";
+delete @ENV{ 'IFS', 'CDPATH', 'ENV', 'BASH_ENV' };
 
 open( FILE, "users.txt" ) || die "problem opening users.txt $!";
 my @userInfo = <FILE>; 
 close FILE;
 
 read STDIN, my $POST_data, $ENV{'CONTENT_LENGTH'}; # anything that come from a POST request goes here
+
 print "Content-type: text/html\n\n";
+
+if ($POST_data =~ m/([^<>]*)/) # wont match <> which can be harmful
+{
+	$POST_data = $1;
+	print $POST_data;
+}
 
 my %params = &parse_form($POST_data);
 
@@ -52,7 +63,7 @@ if (!&isLoggedIn)
 		{
 			&signin( $params{'username'});
 			&log_data("$params{'username'} logged in");
-			&render('home', { username => &getUsername });
+			&render('home', { username => &getUsername, success=>"Welcome to BRO-dway!" });
 		}
 		else
 		{

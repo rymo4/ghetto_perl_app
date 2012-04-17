@@ -212,7 +212,7 @@ sub output_availability_html {
   my $formatted;
   foreach my $id (keys %plays) {
     my @playInfo = split(/\+/,&getPlayName($id));    
-   $formatted .= '<tr><td><li>' . $playInfo[0] . ' at ' . $playInfo[1] . ' - ' . &pluralize('ticket', $plays{$id} ) . ' left</li></td></tr>';  
+   $formatted .= '<tr><td>' . $playInfo[0] . ' at ' . $playInfo[1] . ' - ' . &pluralize('ticket', $plays{$id} ) . ' left</td></tr>';  
   }
   return $formatted;
 }
@@ -443,7 +443,7 @@ sub get_stats_html {
 	my $formatted;
 	foreach (keys %data)
 	{
-		$formatted.= '<tr><td><li>' . &pluralize($_, $data{$_}) . '</li></td></tr>';
+		$formatted.= '<tr><td>' . &pluralize($_, $data{$_}) . '</td></tr>';
 	}
 	return $formatted;
 }
