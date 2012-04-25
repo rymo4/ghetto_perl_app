@@ -38,7 +38,6 @@ sub generate_pdf_reservations {
   $txt->translate(300,$dy);
   $txt->text_center("BRO-adway Reservations for: $username");
 
-  
   @userReservations = @_;
   $reservationNum = 1;
   $dy -= 80;

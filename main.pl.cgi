@@ -19,7 +19,6 @@ print "Content-type: text/html\n\n";
 if ($POST_data =~ m/([^<>]*)/) # wont match <> which can be harmful
 {
 	$POST_data = $1;
-	print $POST_data;
 }
 
 my %params = &parse_form($POST_data);
@@ -63,7 +62,7 @@ if (!&isLoggedIn)
 		{
 			&signin( $params{'username'});
 			&log_data("$params{'username'} logged in");
-			&render('home', { username => &getUsername, success=>"Welcome to BRO-dway!" });
+			&render('home', { username => &getUsername, success=>"Welcome to BRO-adway Scalpers!" });
 		}
 		else
 		{
