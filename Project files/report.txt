@@ -1,0 +1,40 @@
+CS3157 Project -- BRO-dway
+
+In order to execute the website run the main.pl.cgi script.
+
+Division of labor.
+
+Ryder's Work:
+	Ryder set up the framework of the website, created methods such as render() to allow html files to be called and rendered, with variables passed into the views. Ryder also handled 
+	most of the frontend work. most of the methods that take input from the user where written by ryder. We are using Twitter Bootstrap for the styling of the website since it speeds up development considerably. 
+
+Enrique's Work:
+	Enrique wrote most of the interaction with the "database", which is a series of txt files. He wrote the methods to retrieve and modify information within them and parse it in such way that it can be used by the front
+	end methoods. He also set up the pdf rendering so that users can view all of the tickets they have 
+	purchased. 
+	
+All of the remaining work was split between both of us as we saw fit while writing the code, dividing work was not an issua since the project in almost it's entirety was coded by both of
+simultaniously and using a github account..
+
+NOTE: For the PDF generation we relied on a module take from CPan and adapted it to be used by our project.
+
+Project Files.
+The project contains several files, the ones written by the team members are the following:
+
+Perl files:
+-main.pl.cgi .... main script to be run in order to execute the website
+-helpers.pl .... helper methods called on by main and the other perl files
+-html_printer.pl .... framework for the website
+-layout.pl .... framework for the website
+
+Html files:
+-landing.html .... main page where users are taken if not logged in
+-home.html .... home page where users can make their reservations
+-profile.html .... page where a users list of reservations is displayed, he can manually chage his password and he can generate a PDF of his reservations
+-stats.html .... page where the websites stats (logins, users, reservations, etc are displayed) as well as the remaining ticket availability
+
+Text files:
+-reservations.txt .... database that keeps track of made reservations
+-sessions.txt .... database that keeps track of open sessions for logged in users (by username and IP)
+-availability.txt .... database for th tickets and plays that are available to purchase
+-logfile.txt .... log of all users, tracks all of their activities

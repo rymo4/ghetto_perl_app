@@ -1,0 +1,41 @@
+<h3>You are signed in as $username</h3>
+<div>
+	<p>All shows sell for $ 60 a ticket. The tickets are for the first show at the selected time after your purchase.</p>
+</div>
+<h2>Make a Reservation for one of our fantastic shows!</h2>
+<br>
+<form action="main.pl.cgi" method=POST>
+
+	<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Choose a play</th>
+      <th>Choose a time</th>
+      <th>Choose an amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+      	<select name="play_name">
+		$play_options
+		</select>
+	</td>
+      <td>
+      	<select name="play_time">
+		$play_times
+		</select>
+	</td>
+      <td>	
+    <select name="numseats">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		</select>
+	</td>
+    </tr>
+  </tbody>
+</table>
+
+<input type="submit" value="Reserve" class="btn btn-primary btn-large"></form>
