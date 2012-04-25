@@ -25,6 +25,7 @@ my $NUMTICKS_COLUM = 2;
 
 sub generate_pdf_reservations {
 
+
   my $username = &getUsername();
   my $pdf  = PDF::API2->new(-file => "$username".".pdf");
   $pdf->mediabox(595,842);
@@ -33,15 +34,16 @@ sub generate_pdf_reservations {
   my $txt = $page->text;
   my $dy = 750;
   $txt->textstart;
-  $txt->font($fnt, 20);
+  $txt->font($fnt, 30);
 
   $txt->translate(300,$dy);
-  $txt->text_center("BRO-adway Reservations for: $username");
-
-  
+  $txt->text_center("BRO-dway Reservations for: $username");
+  $txt->textend;
   my @userReservations = @_;
   my $reservationNum = 1;
-  my $dy -= 80;
+  $dy -= 80;
+  $txt = $page->text;
+  $txt->font($fnt, 20);
   foreach my $reservation (@userReservations)
   {
     my @reservationInfo = split(/\+/,$reservation);
@@ -53,6 +55,7 @@ sub generate_pdf_reservations {
   $txt->textend;
   $pdf->save;
   $pdf->end( );
+
 }
 
 sub getReservations {

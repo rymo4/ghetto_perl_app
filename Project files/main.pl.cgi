@@ -1,4 +1,4 @@
-#!/usr/bin/perl -T
+#!/usr/bin/perl
 BEGIN { push @INC,'.'; };
 use strict;
 use Digest::MD5 qw(md5 md5_hex md5_base64);
