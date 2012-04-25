@@ -30,7 +30,7 @@ sub layout { # takes 1 string that contains what to insert in $yield
 			  <div class="navbar-inner">
 			    <div class="container">
 			      <ul class="nav nav-pills">
-							<a href="" class="brand">Bro-dway</a>
+							<a href="" class="brand">Bro-adway</a>
 						 	$logout_button
 						 	$home_button
 							$profile_button
@@ -49,8 +49,6 @@ sub layout { # takes 1 string that contains what to insert in $yield
 					<form name="logout" action="main.pl.cgi" method=POST class="unstyled"><input type="hidden" name="logout"></form>
 					<form name="profile" action="main.pl.cgi" method=POST><input type="hidden" name="profile"></form>
 					<form name="stats" action="main.pl.cgi" method=POST><input type="hidden" name="stats"></form>
-					
-					
 			</div>
 		</body>
 		<br>
